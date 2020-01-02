@@ -411,7 +411,7 @@ package compiler;
     {
               /** Array declarations control */
                 if((Integer)((TokenInfo)yystack.valueAt (3)).getSemanticValue() > (Integer)(((TokenInfo)yystack.valueAt (1)).getSemanticValue())){
-                    showErrMsg("invalid array "+yystack.valueAt (5)+" declaration");
+                    showErrMsg("invalid array "+((TokenInfo)yystack.valueAt (5)).getSemanticValue()+" declaration",((TokenInfo)yystack.valueAt (5)).getLinePos());
                 }
                 validateNewPids((TokenInfo)yystack.valueAt (5));
 
@@ -505,138 +505,142 @@ package compiler;
   case 17:
   if (yyn == 17)
     /* "compiler.y":133  */ /* lalr1.java:480  */
-    {};
+    {
+                if(!pidIds.contains(((TokenInfo)yystack.valueAt (2)).getSemanticValue())){
+                  showErrMsg("undeclared variable "+((TokenInfo)yystack.valueAt (1)).getSemanticValue(),((TokenInfo)yystack.valueAt (1)).getLinePos());
+                }
+              };
   break;
     
 
   case 18:
   if (yyn == 18)
-    /* "compiler.y":134  */ /* lalr1.java:480  */
+    /* "compiler.y":138  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 19:
   if (yyn == 19)
-    /* "compiler.y":136  */ /* lalr1.java:480  */
+    /* "compiler.y":140  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 20:
   if (yyn == 20)
-    /* "compiler.y":137  */ /* lalr1.java:480  */
+    /* "compiler.y":141  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 21:
   if (yyn == 21)
-    /* "compiler.y":138  */ /* lalr1.java:480  */
+    /* "compiler.y":142  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 22:
   if (yyn == 22)
-    /* "compiler.y":139  */ /* lalr1.java:480  */
+    /* "compiler.y":143  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 23:
   if (yyn == 23)
-    /* "compiler.y":140  */ /* lalr1.java:480  */
+    /* "compiler.y":144  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 24:
   if (yyn == 24)
-    /* "compiler.y":141  */ /* lalr1.java:480  */
+    /* "compiler.y":145  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 25:
   if (yyn == 25)
-    /* "compiler.y":143  */ /* lalr1.java:480  */
+    /* "compiler.y":147  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 26:
   if (yyn == 26)
-    /* "compiler.y":144  */ /* lalr1.java:480  */
+    /* "compiler.y":148  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 27:
   if (yyn == 27)
-    /* "compiler.y":145  */ /* lalr1.java:480  */
+    /* "compiler.y":149  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 28:
   if (yyn == 28)
-    /* "compiler.y":146  */ /* lalr1.java:480  */
+    /* "compiler.y":150  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 29:
   if (yyn == 29)
-    /* "compiler.y":147  */ /* lalr1.java:480  */
+    /* "compiler.y":151  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 30:
   if (yyn == 30)
-    /* "compiler.y":148  */ /* lalr1.java:480  */
+    /* "compiler.y":152  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 31:
   if (yyn == 31)
-    /* "compiler.y":150  */ /* lalr1.java:480  */
+    /* "compiler.y":154  */ /* lalr1.java:480  */
     { };
   break;
     
 
   case 32:
   if (yyn == 32)
-    /* "compiler.y":151  */ /* lalr1.java:480  */
+    /* "compiler.y":155  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 33:
   if (yyn == 33)
-    /* "compiler.y":153  */ /* lalr1.java:480  */
+    /* "compiler.y":157  */ /* lalr1.java:480  */
     { /*System.out.println("\u001b[48;5;160m Inicjalizacja zmiennej"+$1+"\u001b[0m");*/};
   break;
     
 
   case 34:
   if (yyn == 34)
-    /* "compiler.y":154  */ /* lalr1.java:480  */
+    /* "compiler.y":158  */ /* lalr1.java:480  */
     {/*System.out.println("\u001b[48;5;160m Pobieranie wartości z tablicy \u001b[0m");*/};
   break;
     
 
   case 35:
   if (yyn == 35)
-    /* "compiler.y":155  */ /* lalr1.java:480  */
+    /* "compiler.y":159  */ /* lalr1.java:480  */
     {/*System.out.println("\u001b[48;5;160m Inicjalizacja tablicy \u001b[0m");*/};
   break;
     
 
 
-/* "CompilerBison.java":640  */ /* lalr1.java:480  */
+/* "CompilerBison.java":644  */ /* lalr1.java:480  */
         default: break;
       }
 
@@ -1155,9 +1159,9 @@ private static final byte yycheck_[] = yycheck_init();
     return new short[]
     {
        0,    98,    98,    99,   101,   105,   113,   117,   123,   124,
-     126,   127,   128,   129,   130,   131,   132,   133,   134,   136,
-     137,   138,   139,   140,   141,   143,   144,   145,   146,   147,
-     148,   150,   151,   153,   154,   155
+     126,   127,   128,   129,   130,   131,   132,   133,   138,   140,
+     141,   142,   143,   144,   145,   147,   148,   149,   150,   151,
+     152,   154,   155,   157,   158,   159
     };
   }
 
@@ -1249,8 +1253,8 @@ private static final byte yycheck_[] = yycheck_init();
    private List<String> pidIds = new ArrayList<>(100);
 
 
-   private void showErrMsg(String msg) {
-       scanner.yyerror("Error in line "+(scanner.getYyline()+1)+": "+msg);
+   private void showErrMsg(String msg, int line) {
+       scanner.yyerror("Error in line "+line+": "+msg);
        finishChecking();
    }
 
@@ -1260,7 +1264,7 @@ private static final byte yycheck_[] = yycheck_init();
 
    private void validateNewPids(TokenInfo tokenInfo){
      if (pidIds.contains(tokenInfo.getSemanticValue().toString())) {
-       showErrMsg("second declaration " + tokenInfo);
+       showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
      } else {
        pidIds.add(tokenInfo.getSemanticValue().toString());
      }
@@ -1308,9 +1312,9 @@ private static final byte yycheck_[] = yycheck_init();
        }
    
 
-/* "CompilerBison.java":1312  */ /* lalr1.java:1056  */
+/* "CompilerBison.java":1316  */ /* lalr1.java:1056  */
 
 }
 
-/* "compiler.y":156  */ /* lalr1.java:1060  */
+/* "compiler.y":160  */ /* lalr1.java:1060  */
 

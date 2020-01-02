@@ -19,8 +19,8 @@
    private List<String> pidIds = new ArrayList<>(100);
 
 
-   private void showErrMsg(String msg) {
-       scanner.yyerror("Error in line "+(scanner.getYyline()+1)+": "+msg);
+   private void showErrMsg(String msg, int line) {
+       scanner.yyerror("Error in line "+line+": "+msg);
        finishChecking();
    }
 
@@ -30,7 +30,7 @@
 
    private void validateNewPids(TokenInfo tokenInfo){
      if (pidIds.contains(tokenInfo.getSemanticValue().toString())) {
-       showErrMsg("second declaration " + tokenInfo);
+       showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
      } else {
        pidIds.add(tokenInfo.getSemanticValue().toString());
      }
@@ -105,7 +105,7 @@ declarations:  declarations COMMA PIDENTIFIER {
               | declarations COMMA PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET {
               /** Array declarations control */
                 if((Integer)((TokenInfo)$5).getSemanticValue() > (Integer)(((TokenInfo)$7).getSemanticValue())){
-                    showErrMsg("invalid array "+$3+" declaration");
+                    showErrMsg("invalid array "+((TokenInfo)$3).getSemanticValue()+" declaration",((TokenInfo)$3).getLinePos());
                 }
                 validateNewPids((TokenInfo)$3);
 
@@ -130,7 +130,11 @@ command:        identifier ASSIGN expression SEMICOLON { /*System.out.println(" 
               | DO commands WHILE condition ENDDO {}
               | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR {}
               | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
-              | READ identifier SEMICOLON {}
+              | READ identifier SEMICOLON {
+                if(!pidIds.contains(((TokenInfo)$1).getSemanticValue())){
+                  showErrMsg("undeclared variable "+((TokenInfo)$2).getSemanticValue(),((TokenInfo)$2).getLinePos());
+                }
+              }
               | WRITE value SEMICOLON {}
 ;
 expression:     value {}

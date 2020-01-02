@@ -7,7 +7,6 @@ package compiler;
 %line
 %column
 /*%debug*/
-%debug
 %{
   @Override
   public void yyerror(String msg) {
