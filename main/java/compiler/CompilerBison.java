@@ -1262,7 +1262,7 @@ private static final byte yycheck_[] = yycheck_init();
      System.exit(1);
    }
 
-   private void validateNewPids(TokenInfo tokenInfo){
+   private void validateNewPids(TokenInfo tokenInfo) {
      if (pidIds.contains(tokenInfo.getSemanticValue().toString())) {
        showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
      } else {
