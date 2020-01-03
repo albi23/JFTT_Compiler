@@ -39,7 +39,7 @@ package compiler;
 
   import java.util.ArrayList;
   import java.util.List;
-  import compiler.CompilerFlex.TokenInfo;
+  import compiler.holder.TokenInfo;
 
 
 /* "CompilerBison.java":46  */ /* lalr1.java:92  */
@@ -1262,7 +1262,7 @@ private static final byte yycheck_[] = yycheck_init();
      System.exit(1);
    }
 
-   private void validateNewPids(TokenInfo tokenInfo) {
+   private void validateNewPids(TokenInfo tokenInfo){
      if (pidIds.contains(tokenInfo.getSemanticValue().toString())) {
        showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
      } else {

@@ -9,7 +9,7 @@
 %code imports {
   import java.util.ArrayList;
   import java.util.List;
-  import compiler.CompilerFlex.TokenInfo;
+  import compiler.holder.TokenInfo;
 
 }
 

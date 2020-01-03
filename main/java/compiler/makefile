@@ -4,7 +4,7 @@ runFlex:
 	jflex  compiler.jflex
 
 runBison:
-	bison compiler.y --file-prefix=CompilerBison --print-datadir --defines=testInterface
+	bison compiler.y --file-prefix=CompilerBison
 
 compileAll:	runFlex runBison
 

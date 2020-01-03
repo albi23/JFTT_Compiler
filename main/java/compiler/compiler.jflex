@@ -1,5 +1,7 @@
 package compiler;
 
+import compiler.holder.TokenInfo;
+
 %%
 %implements CompilerBison.Lexer
 %class CompilerFlex

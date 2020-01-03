@@ -1,4 +1,6 @@
-package compiler;
+package compiler.holder.types;
+
+import compiler.holder.TypeMarkInterface;
 
 import java.math.BigInteger;
 
