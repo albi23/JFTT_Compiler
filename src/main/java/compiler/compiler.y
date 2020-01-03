@@ -132,7 +132,7 @@ command:        identifier ASSIGN expression SEMICOLON { /*System.out.println(" 
               | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
               | READ identifier SEMICOLON {
                 if(!pidIds.contains(((TokenInfo)$1).getSemanticValue())){
-                  showErrMsg("undeclared variable "+((TokenInfo)$2).getSemanticValue(),((TokenInfo)$2).getLinePos());
+                  showErrMsg("use of uninitialized variable "+((TokenInfo)$2).getSemanticValue(),((TokenInfo)$2).getLinePos());
                 }
               }
               | WRITE value SEMICOLON {}

@@ -507,7 +507,7 @@ package compiler;
     /* "compiler.y":133  */ /* lalr1.java:480  */
     {
                 if(!pidIds.contains(((TokenInfo)yystack.valueAt (2)).getSemanticValue())){
-                  showErrMsg("undeclared variable "+((TokenInfo)yystack.valueAt (1)).getSemanticValue(),((TokenInfo)yystack.valueAt (1)).getLinePos());
+                  showErrMsg("use of uninitialized variable "+((TokenInfo)yystack.valueAt (1)).getSemanticValue(),((TokenInfo)yystack.valueAt (1)).getLinePos());
                 }
               };
   break;
