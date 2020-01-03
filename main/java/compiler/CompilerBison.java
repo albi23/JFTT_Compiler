@@ -35,7 +35,7 @@ package compiler;
 
 
 /* "%code imports" blocks.  */
-/* "compiler.y":9  */ /* lalr1.java:92  */
+/* "compiler.y":10  */ /* lalr1.java:92  */
 
   import java.util.ArrayList;
   import java.util.List;
@@ -57,6 +57,23 @@ package compiler;
   /** Name of the skeleton that generated this parser.  */
   public static final String bisonSkeleton = "lalr1.java";
 
+
+  /**
+   * True if verbose error messages are enabled.
+   */
+  private boolean yyErrorVerbose = true;
+
+  /**
+   * Return whether verbose error messages are enabled.
+   */
+  public final boolean getErrorVerbose() { return yyErrorVerbose; }
+
+  /**
+   * Set the verbosity of error messages.
+   * @param verbose True to request verbose error messages.
+   */
+  public final void setErrorVerbose(boolean verbose)
+  { yyErrorVerbose = verbose; }
 
 
 
@@ -384,21 +401,21 @@ package compiler;
       {
           case 2:
   if (yyn == 2)
-    /* "compiler.y":98  */ /* lalr1.java:480  */
+    /* "compiler.y":99  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 3:
   if (yyn == 3)
-    /* "compiler.y":99  */ /* lalr1.java:480  */
+    /* "compiler.y":100  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 4:
   if (yyn == 4)
-    /* "compiler.y":101  */ /* lalr1.java:480  */
+    /* "compiler.y":102  */ /* lalr1.java:480  */
     {
                 validateNewPids((TokenInfo)yystack.valueAt (0));
               };
@@ -407,7 +424,7 @@ package compiler;
 
   case 5:
   if (yyn == 5)
-    /* "compiler.y":105  */ /* lalr1.java:480  */
+    /* "compiler.y":106  */ /* lalr1.java:480  */
     {
               /** Array declarations control */
                 if((Integer)((TokenInfo)yystack.valueAt (3)).getSemanticValue() > (Integer)(((TokenInfo)yystack.valueAt (1)).getSemanticValue())){
@@ -421,7 +438,7 @@ package compiler;
 
   case 6:
   if (yyn == 6)
-    /* "compiler.y":113  */ /* lalr1.java:480  */
+    /* "compiler.y":114  */ /* lalr1.java:480  */
     {
                 validateNewPids((TokenInfo)yystack.valueAt (0));
               };
@@ -430,7 +447,7 @@ package compiler;
 
   case 7:
   if (yyn == 7)
-    /* "compiler.y":117  */ /* lalr1.java:480  */
+    /* "compiler.y":118  */ /* lalr1.java:480  */
     {
 
                 /*System.out.println("Inicjalizacja tablicy w  w linijce "+scanner.getYyline() );*/
@@ -441,70 +458,70 @@ package compiler;
 
   case 8:
   if (yyn == 8)
-    /* "compiler.y":123  */ /* lalr1.java:480  */
+    /* "compiler.y":124  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 9:
   if (yyn == 9)
-    /* "compiler.y":124  */ /* lalr1.java:480  */
+    /* "compiler.y":125  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 10:
   if (yyn == 10)
-    /* "compiler.y":126  */ /* lalr1.java:480  */
+    /* "compiler.y":127  */ /* lalr1.java:480  */
     { /*System.out.println(" przypisanie wartości w linijce : "+scanner.getYyline());*/};
   break;
     
 
   case 11:
   if (yyn == 11)
-    /* "compiler.y":127  */ /* lalr1.java:480  */
+    /* "compiler.y":128  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 12:
   if (yyn == 12)
-    /* "compiler.y":128  */ /* lalr1.java:480  */
+    /* "compiler.y":129  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 13:
   if (yyn == 13)
-    /* "compiler.y":129  */ /* lalr1.java:480  */
+    /* "compiler.y":130  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 14:
   if (yyn == 14)
-    /* "compiler.y":130  */ /* lalr1.java:480  */
+    /* "compiler.y":131  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 15:
   if (yyn == 15)
-    /* "compiler.y":131  */ /* lalr1.java:480  */
+    /* "compiler.y":132  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 16:
   if (yyn == 16)
-    /* "compiler.y":132  */ /* lalr1.java:480  */
+    /* "compiler.y":133  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 17:
   if (yyn == 17)
-    /* "compiler.y":133  */ /* lalr1.java:480  */
+    /* "compiler.y":134  */ /* lalr1.java:480  */
     {
                 if(!pidIds.contains(((TokenInfo)yystack.valueAt (2)).getSemanticValue())){
                   showErrMsg("use of uninitialized variable "+((TokenInfo)yystack.valueAt (1)).getSemanticValue(),((TokenInfo)yystack.valueAt (1)).getLinePos());
@@ -515,132 +532,132 @@ package compiler;
 
   case 18:
   if (yyn == 18)
-    /* "compiler.y":138  */ /* lalr1.java:480  */
+    /* "compiler.y":139  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 19:
   if (yyn == 19)
-    /* "compiler.y":140  */ /* lalr1.java:480  */
+    /* "compiler.y":141  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 20:
   if (yyn == 20)
-    /* "compiler.y":141  */ /* lalr1.java:480  */
+    /* "compiler.y":142  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 21:
   if (yyn == 21)
-    /* "compiler.y":142  */ /* lalr1.java:480  */
+    /* "compiler.y":143  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 22:
   if (yyn == 22)
-    /* "compiler.y":143  */ /* lalr1.java:480  */
+    /* "compiler.y":144  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 23:
   if (yyn == 23)
-    /* "compiler.y":144  */ /* lalr1.java:480  */
+    /* "compiler.y":145  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 24:
   if (yyn == 24)
-    /* "compiler.y":145  */ /* lalr1.java:480  */
+    /* "compiler.y":146  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 25:
   if (yyn == 25)
-    /* "compiler.y":147  */ /* lalr1.java:480  */
+    /* "compiler.y":148  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 26:
   if (yyn == 26)
-    /* "compiler.y":148  */ /* lalr1.java:480  */
+    /* "compiler.y":149  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 27:
   if (yyn == 27)
-    /* "compiler.y":149  */ /* lalr1.java:480  */
+    /* "compiler.y":150  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 28:
   if (yyn == 28)
-    /* "compiler.y":150  */ /* lalr1.java:480  */
+    /* "compiler.y":151  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 29:
   if (yyn == 29)
-    /* "compiler.y":151  */ /* lalr1.java:480  */
+    /* "compiler.y":152  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 30:
   if (yyn == 30)
-    /* "compiler.y":152  */ /* lalr1.java:480  */
+    /* "compiler.y":153  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 31:
   if (yyn == 31)
-    /* "compiler.y":154  */ /* lalr1.java:480  */
-    { };
+    /* "compiler.y":155  */ /* lalr1.java:480  */
+    { System.out.println("Mam numerek :D ");};
   break;
     
 
   case 32:
   if (yyn == 32)
-    /* "compiler.y":155  */ /* lalr1.java:480  */
+    /* "compiler.y":156  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 33:
   if (yyn == 33)
-    /* "compiler.y":157  */ /* lalr1.java:480  */
+    /* "compiler.y":158  */ /* lalr1.java:480  */
     { /*System.out.println("\u001b[48;5;160m Inicjalizacja zmiennej"+$1+"\u001b[0m");*/};
   break;
     
 
   case 34:
   if (yyn == 34)
-    /* "compiler.y":158  */ /* lalr1.java:480  */
+    /* "compiler.y":159  */ /* lalr1.java:480  */
     {/*System.out.println("\u001b[48;5;160m Pobieranie wartości z tablicy \u001b[0m");*/};
   break;
     
 
   case 35:
   if (yyn == 35)
-    /* "compiler.y":159  */ /* lalr1.java:480  */
+    /* "compiler.y":160  */ /* lalr1.java:480  */
     {/*System.out.println("\u001b[48;5;160m Inicjalizacja tablicy \u001b[0m");*/};
   break;
     
 
 
-/* "CompilerBison.java":644  */ /* lalr1.java:480  */
+/* "CompilerBison.java":661  */ /* lalr1.java:480  */
         default: break;
       }
 
@@ -655,6 +672,41 @@ package compiler;
     return YYNEWSTATE;
   }
 
+
+  /* Return YYSTR after stripping away unnecessary quotes and
+     backslashes, so that it's suitable for yyerror.  The heuristic is
+     that double-quoting is unnecessary unless the string contains an
+     apostrophe, a comma, or backslash (other than backslash-backslash).
+     YYSTR is taken from yytname.  */
+  private final String yytnamerr_ (String yystr)
+  {
+    if (yystr.charAt (0) == '"')
+      {
+        StringBuffer yyr = new StringBuffer ();
+        strip_quotes: for (int i = 1; i < yystr.length (); i++)
+          switch (yystr.charAt (i))
+            {
+            case '\'':
+            case ',':
+              break strip_quotes;
+
+            case '\\':
+              if (yystr.charAt(++i) != '\\')
+                break strip_quotes;
+              /* Fall through.  */
+            default:
+              yyr.append (yystr.charAt (i));
+              break;
+
+            case '"':
+              return yyr.toString ();
+            }
+      }
+    else if (yystr.equals ("$end"))
+      return "end of input";
+
+    return yystr;
+  }
 
 
   /*--------------------------------.
@@ -925,6 +977,73 @@ package compiler;
   // Generate an error message.
   private String yysyntax_error (int yystate, int tok)
   {
+    if (yyErrorVerbose)
+      {
+        /* There are many possibilities here to consider:
+           - If this state is a consistent state with a default action,
+             then the only way this function was invoked is if the
+             default action is an error action.  In that case, don't
+             check for expected tokens because there are none.
+           - The only way there can be no lookahead present (in tok) is
+             if this state is a consistent state with a default action.
+             Thus, detecting the absence of a lookahead is sufficient to
+             determine that there is no unexpected or expected token to
+             report.  In that case, just report a simple "syntax error".
+           - Don't assume there isn't a lookahead just because this
+             state is a consistent state with a default action.  There
+             might have been a previous inconsistent state, consistent
+             state with a non-default action, or user semantic action
+             that manipulated yychar.  (However, yychar is currently out
+             of scope during semantic actions.)
+           - Of course, the expected token list depends on states to
+             have correct lookahead information, and it depends on the
+             parser not to perform extra reductions after fetching a
+             lookahead from the scanner and before detecting a syntax
+             error.  Thus, state merging (from LALR or IELR) and default
+             reductions corrupt the expected token list.  However, the
+             list is correct for canonical LR with one exception: it
+             will still contain any token that will not be accepted due
+             to an error action in a later state.
+        */
+        if (tok != yyempty_)
+          {
+            /* FIXME: This method of building the message is not compatible
+               with internationalization.  */
+            StringBuffer res =
+              new StringBuffer ("syntax error, unexpected ");
+            res.append (yytnamerr_ (yytname_[tok]));
+            int yyn = yypact_[yystate];
+            if (!yy_pact_value_is_default_ (yyn))
+              {
+                /* Start YYX at -YYN if negative to avoid negative
+                   indexes in YYCHECK.  In other words, skip the first
+                   -YYN actions for this state because they are default
+                   actions.  */
+                int yyxbegin = yyn < 0 ? -yyn : 0;
+                /* Stay within bounds of both yycheck and yytname.  */
+                int yychecklim = yylast_ - yyn + 1;
+                int yyxend = yychecklim < yyntokens_ ? yychecklim : yyntokens_;
+                int count = 0;
+                for (int x = yyxbegin; x < yyxend; ++x)
+                  if (yycheck_[x + yyn] == x && x != yyterror_
+                      && !yy_table_value_is_error_ (yytable_[x + yyn]))
+                    ++count;
+                if (count < 5)
+                  {
+                    count = 0;
+                    for (int x = yyxbegin; x < yyxend; ++x)
+                      if (yycheck_[x + yyn] == x && x != yyterror_
+                          && !yy_table_value_is_error_ (yytable_[x + yyn]))
+                        {
+                          res.append (count++ == 0 ? ", expecting " : " or ");
+                          res.append (yytnamerr_ (yytname_[x]));
+                        }
+                  }
+              }
+            return res.toString ();
+          }
+      }
+
     return "syntax error";
   }
 
@@ -1158,10 +1277,10 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new short[]
     {
-       0,    98,    98,    99,   101,   105,   113,   117,   123,   124,
-     126,   127,   128,   129,   130,   131,   132,   133,   138,   140,
-     141,   142,   143,   144,   145,   147,   148,   149,   150,   151,
-     152,   154,   155,   157,   158,   159
+       0,    99,    99,   100,   102,   106,   114,   118,   124,   125,
+     127,   128,   129,   130,   131,   132,   133,   134,   139,   141,
+     142,   143,   144,   145,   146,   148,   149,   150,   151,   152,
+     153,   155,   156,   158,   159,   160
     };
   }
 
@@ -1246,7 +1365,7 @@ private static final byte yycheck_[] = yycheck_init();
 
 /* User implementation code.  */
 /* Unqualified %code blocks.  */
-/* "compiler.y":16  */ /* lalr1.java:1056  */
+/* "compiler.y":17  */ /* lalr1.java:1056  */
 
 
    private static CompilerFlex scanner = null;
@@ -1312,9 +1431,9 @@ private static final byte yycheck_[] = yycheck_init();
        }
    
 
-/* "CompilerBison.java":1316  */ /* lalr1.java:1056  */
+/* "CompilerBison.java":1435  */ /* lalr1.java:1056  */
 
 }
 
-/* "compiler.y":160  */ /* lalr1.java:1060  */
+/* "compiler.y":161  */ /* lalr1.java:1060  */
 

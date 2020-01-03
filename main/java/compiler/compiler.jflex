@@ -13,6 +13,7 @@ import compiler.holder.TokenInfo;
   @Override
   public void yyerror(String msg) {
     System.err.println(msg);
+    System.exit(1);
   }
 
   @Override
@@ -24,37 +25,8 @@ import compiler.holder.TokenInfo;
     return zzAtBOL;
   };
 
-  public int getYyline() {
-    return yyline;
-  }
+  private compiler.holder.TokenInfo tokenInfo;
 
-  private TokenInfo tokenInfo;
-
-    public class TokenInfo<V> {
-
-      private V semanticValue;
-      private int linePos;
-
-      public TokenInfo(V semanticValue, int linePos) {
-        this.semanticValue = semanticValue;
-        this.linePos = linePos;
-      }
-
-      public V getSemanticValue() {
-        return semanticValue;
-      }
-      public int getLinePos() {
-        return linePos;
-      }
-
-      @Override
-      public String toString() {
-        return "TokenInfo{" +
-                "semanticValue='" + semanticValue + '\'' +
-                ", linePos=" + linePos +
-                '}';
-      }
-    }
 %}
 escaped_newline = \\\n
 pidentifier = [_a-z]+
@@ -68,6 +40,7 @@ numbers = 0|[1-9][0-9]*|-[1-9][0-9]*
 {comment}     	            {/* Do nothing */}
 \n            { /* Do nothing */ }
 {numbers}       {
+                 if (tokenInfo.getTokenId() == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
                  tokenInfo = new TokenInfo<>(Integer.parseInt(yytext()),yyline+1);
                  return NUM;
                 }
@@ -75,7 +48,7 @@ numbers = 0|[1-9][0-9]*|-[1-9][0-9]*
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
                 return DECLARE;}
 {pidentifier} {
-                tokenInfo = new TokenInfo<>(yytext(),yyline+1);
+                tokenInfo = new TokenInfo<>(yytext(),yyline+1, PIDENTIFIER);
                 return PIDENTIFIER; }
 "BEGIN"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);

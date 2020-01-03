@@ -7,12 +7,19 @@ public class TokenInfo<V> {
     private V semanticValue;
     private int linePos;
     private VariableType type;
+    private int tokenId;
 
     public TokenInfo(V semanticValue, int linePos) {
         this.semanticValue = semanticValue;
         this.linePos = linePos;
+        this.tokenId = -1;
     }
 
+    public TokenInfo(V semanticValue, int linePos, int tokenId) {
+        this.semanticValue = semanticValue;
+        this.linePos = linePos;
+        this.tokenId = tokenId;
+    }
     public V getSemanticValue() {
         return semanticValue;
     }
@@ -22,6 +29,14 @@ public class TokenInfo<V> {
 
     public void setType(VariableType type) {
         this.type = type;
+    }
+
+    public int getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(int tokenId) {
+        this.tokenId = tokenId;
     }
 
     @Override

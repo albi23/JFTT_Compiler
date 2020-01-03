@@ -3,6 +3,7 @@
 %define api.parser.class {CompilerBison}
 %define api.parser.public
 %define package {compiler}
+%define parse.error verbose
 %define api.parser.annotations {@SuppressWarnings("all")}
 %debug
 
@@ -151,7 +152,7 @@ condition:      value EQ value {}
               | value LEQ value {}
               | value GEQ value {}
 ;
-value:          NUM { }
+value:          NUM { System.out.println("Mam numerek :D ");}
               | identifier {}
 ;
 identifier:     PIDENTIFIER { /*System.out.println("\u001b[48;5;160m Inicjalizacja zmiennej"+$1+"\u001b[0m");*/}
