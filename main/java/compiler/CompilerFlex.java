@@ -3,6 +3,7 @@
 package compiler;
 
 import compiler.holder.TokenInfo;
+import java.math.BigInteger;
 
 
 /**
@@ -10,7 +11,7 @@ import compiler.holder.TokenInfo;
  * <a href="http://www.jflex.de/">JFlex</a> 1.7.0
  * from the specification file <tt>compiler.jflex</tt>
  */
-class CompilerFlex implements CompilerBison.Lexer {
+public class CompilerFlex implements CompilerBison.Lexer {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -311,7 +312,7 @@ class CompilerFlex implements CompilerBison.Lexer {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  CompilerFlex(java.io.Reader in) {
+  public CompilerFlex(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -728,7 +729,7 @@ class CompilerFlex implements CompilerBison.Lexer {
           case 43: break;
           case 4: 
             { if (tokenInfo.getTokenId() == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
-                 tokenInfo = new TokenInfo<>(Integer.parseInt(yytext()),yyline+1);
+                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1);
                  return NUM;
             } 
             // fall through

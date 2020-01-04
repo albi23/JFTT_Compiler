@@ -5,9 +5,10 @@ import compiler.holder.types.VariableType;
 public class TokenInfo<V> {
 
     private V semanticValue;
+    private TypeHolder type;
     private int linePos;
-    private VariableType type;
     private int tokenId;
+    private VariableType variableType;
 
     public TokenInfo(V semanticValue, int linePos) {
         this.semanticValue = semanticValue;
@@ -27,16 +28,20 @@ public class TokenInfo<V> {
         return linePos;
     }
 
-    public void setType(VariableType type) {
-        this.type = type;
-    }
-
     public int getTokenId() {
         return tokenId;
     }
 
-    public void setTokenId(int tokenId) {
-        this.tokenId = tokenId;
+    public void setType(TypeHolder type) {
+        this.type = type;
+    }
+
+    public VariableType getVariableType() {
+        return variableType;
+    }
+
+    public void setVariableType(VariableType variableType) {
+        this.variableType = variableType;
     }
 
     @Override

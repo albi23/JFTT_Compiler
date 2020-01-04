@@ -8,34 +8,19 @@
 %debug
 
 %code imports {
-  import java.util.ArrayList;
-  import java.util.List;
-  import compiler.holder.TokenInfo;
+import compiler.holder.TokenInfo;
+import compiler.validation.Validation;
 
+import java.math.BigInteger;
 }
 
 %code{
 
+  /**
+   * ===================================================================================
+   */
    private static CompilerFlex scanner = null;
-   private List<String> pidIds = new ArrayList<>(100);
-
-
-   private void showErrMsg(String msg, int line) {
-       scanner.yyerror("Error in line "+line+": "+msg);
-       finishChecking();
-   }
-
-   private void finishChecking(){
-     System.exit(1);
-   }
-
-   private void validateNewPids(TokenInfo tokenInfo){
-     if (pidIds.contains(tokenInfo.getSemanticValue().toString())) {
-       showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
-     } else {
-       pidIds.add(tokenInfo.getSemanticValue().toString());
-     }
-   }
+   private static  Validation validation;
 
    public static void main(String argv[]) {
            if (argv.length == 0) {
@@ -60,6 +45,7 @@
                        java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
                        java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
                        scanner = new CompilerFlex(reader);
+                       validation = new Validation(scanner);
                        CompilerBison compilerBison = new CompilerBison(scanner);
                        compilerBison.parse();
                    }
@@ -100,25 +86,25 @@ program:        DECLARE declarations BEGIN commands END {}
               | BEGIN commands END {}
 ;
 declarations:  declarations COMMA PIDENTIFIER {
-                validateNewPids((TokenInfo)$3);
+                this.validation.validateNewPids((TokenInfo)$3);
               }
 
               | declarations COMMA PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET {
-              /** Array declarations control */
-                if((Integer)((TokenInfo)$5).getSemanticValue() > (Integer)(((TokenInfo)$7).getSemanticValue())){
-                    showErrMsg("invalid array "+((TokenInfo)$3).getSemanticValue()+" declaration",((TokenInfo)$3).getLinePos());
-                }
-                validateNewPids((TokenInfo)$3);
+                BigInteger beginArray = (BigInteger)((TokenInfo)$5).getSemanticValue();
+                BigInteger endArray = (BigInteger)(((TokenInfo)$7).getSemanticValue());
+                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) $3);
 
               }
               | PIDENTIFIER {
-                validateNewPids((TokenInfo)$1);
+                this.validation.validateNewPids((TokenInfo)$1);
               }
 
               | PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET {
 
-                /*System.out.println("Inicjalizacja tablicy w  w linijce "+scanner.getYyline() );*/
-                validateNewPids((TokenInfo)$1);
+                /** Array declarations control */
+                BigInteger beginArray = (BigInteger)((TokenInfo)$3).getSemanticValue();
+                BigInteger endArray = (BigInteger)(((TokenInfo)$5).getSemanticValue());
+                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) $1);
               }
 ;
 commands:       commands command {}
@@ -132,30 +118,30 @@ command:        identifier ASSIGN expression SEMICOLON { /*System.out.println(" 
               | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR {}
               | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
               | READ identifier SEMICOLON {
-                if(!pidIds.contains(((TokenInfo)$1).getSemanticValue())){
-                  showErrMsg("use of uninitialized variable "+((TokenInfo)$2).getSemanticValue(),((TokenInfo)$2).getLinePos());
-                }
+                validation.validationOfVariableValues((TokenInfo)$1);
               }
-              | WRITE value SEMICOLON {}
+              | WRITE value SEMICOLON {
+                System.out.println("Very important info00o !!!"+$2);
+              }
 ;
-expression:     value {}
-              | value PLUS value {}
-              | value MINUS value {}
-              | value TIMES value {}
-              | value DIV value {}
-              | value MOD value {}
+expression:     value {/** value */}
+              | value PLUS value { /** value PLUS value */}
+              | value MINUS value {/** value MINUS value */}
+              | value TIMES value {/** value TIMES value */}
+              | value DIV value {/** value DIV value */}
+              | value MOD value {/** value MOD value */}
 ;
-condition:      value EQ value {}
-              | value NEQ value {}
-              | value LE value {}
-              | value GE value {}
-              | value LEQ value {}
-              | value GEQ value {}
+condition:      value EQ value {/** value EQ value */}
+              | value NEQ value {/** value NEQ value */}
+              | value LE value {/** value LE value */}
+              | value GE value {/** value GE value */}
+              | value LEQ value {/** value LEQ value */}
+              | value GEQ value {/** value GEQ value */}
 ;
 value:          NUM { System.out.println("Mam numerek :D ");}
-              | identifier {}
+              | identifier {/** value */}
 ;
-identifier:     PIDENTIFIER { /*System.out.println("\u001b[48;5;160m Inicjalizacja zmiennej"+$1+"\u001b[0m");*/}
-              | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {/*System.out.println("\u001b[48;5;160m Pobieranie wartości z tablicy \u001b[0m");*/}
+identifier:     PIDENTIFIER { }
+              | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {}
               | PIDENTIFIER L_BRACKET NUM R_BRACKET     {/*System.out.println("\u001b[48;5;160m Inicjalizacja tablicy \u001b[0m");*/}
 %%

@@ -1,11 +1,11 @@
 package compiler.holder.types;
 
-import compiler.holder.TypeMarkInterface;
+import compiler.holder.TypeHolder;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 
-public class ArrayType implements TypeMarkInterface {
+public class ArrayType implements TypeHolder {
 
     private static final int maxArrSize = 2_147_483_647;
     private int beginTab;
@@ -13,13 +13,15 @@ public class ArrayType implements TypeMarkInterface {
     private int shift;
     private BigInteger[] tab;
 
-    public ArrayType(int beginTab, int endTab) throws IllegalArgumentException{
-        this.beginTab = beginTab;
-        this.endTab = endTab;
-        long tabSize = (long) endTab - (long) beginTab + 1;
+    public ArrayType(BigInteger beginTab, BigInteger endTab) throws IllegalArgumentException{
+        long tmp1 = endTab.longValueExact();
+        long tmp2 = beginTab.longValueExact();
+        long tabSize = tmp1 - tmp2 + 1;
         if (tabSize > maxArrSize) throw new IllegalArgumentException("The maximum size of an array is "+maxArrSize);
+        this.beginTab = (int) tmp2;
+        this.endTab = (int)tmp1;
         this.tab = new BigInteger[(int) tabSize];
-        this.shift = -beginTab;
+        this.shift = -this.beginTab;
     }
 
 
@@ -40,7 +42,10 @@ public class ArrayType implements TypeMarkInterface {
     @Override
     public String toString() {
         return "ArrayType{" +
-                "tab=" + Arrays.toString(tab) +
+                "beginTab=" + beginTab +
+                ", endTab=" + endTab +
+                ", shift=" + shift +
+                ", tab=" + Arrays.toString(tab) +
                 '}';
     }
 }

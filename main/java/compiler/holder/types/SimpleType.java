@@ -1,10 +1,10 @@
 package compiler.holder.types;
 
-import compiler.holder.TypeMarkInterface;
+import compiler.holder.TypeHolder;
 
 import java.math.BigInteger;
 
-public class SimpleType implements TypeMarkInterface {
+public class SimpleType implements TypeHolder {
 
     private BigInteger value;
 
