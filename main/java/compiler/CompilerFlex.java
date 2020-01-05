@@ -729,7 +729,7 @@ public class CompilerFlex implements CompilerBison.Lexer {
           case 43: break;
           case 4: 
             { if (tokenInfo.getTokenId() == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
-                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1);
+                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1, NUM);
                  return NUM;
             } 
             // fall through

@@ -2,13 +2,16 @@ package compiler.holder;
 
 import compiler.holder.types.VariableType;
 
+import java.math.BigInteger;
+
 public class TokenInfo<V> {
 
     private V semanticValue;
     private TypeHolder type;
+    private VariableType variableType;
+    private BigInteger value;
     private int linePos;
     private int tokenId;
-    private VariableType variableType;
 
     public TokenInfo(V semanticValue, int linePos) {
         this.semanticValue = semanticValue;
@@ -36,8 +39,20 @@ public class TokenInfo<V> {
         this.type = type;
     }
 
+    public TypeHolder getType() {
+        return type;
+    }
+
     public VariableType getVariableType() {
         return variableType;
+    }
+
+    public BigInteger getValue() {
+        return value;
+    }
+
+    public void setValue(BigInteger value) {
+        this.value = value;
     }
 
     public void setVariableType(VariableType variableType) {
@@ -47,8 +62,12 @@ public class TokenInfo<V> {
     @Override
     public String toString() {
         return "TokenInfo{" +
-                "semanticValue='" + semanticValue + '\'' +
+                "semanticValue=" + semanticValue +
+                ", type=" + type +
+                ", variableType=" + variableType +
+                ", value=" + value +
                 ", linePos=" + linePos +
+                ", tokenId=" + tokenId +
                 '}';
     }
 }

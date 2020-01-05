@@ -1,6 +1,8 @@
 [ Błąd w linii 5: użycie niezainicjowanej zmiennej a ]
 DECLARE
-  a
+  a, c, d(5:10), f, e
 BEGIN
   WRITE a;
+  WRITE 5;
+  WRITE b(a);
 END

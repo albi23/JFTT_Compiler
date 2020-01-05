@@ -1,42 +1,43 @@
 package compiler.holder.types;
 
 import compiler.holder.TypeHolder;
+import compiler.validation.Validation;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 
 public class ArrayType implements TypeHolder {
 
-    private static final int maxArrSize = 2_147_483_647;
-    private int beginTab;
-    private int endTab;
-    private int shift;
+    private BigInteger beginTab;
+    private BigInteger endTab;
     private BigInteger[] tab;
+    private BigInteger shift;
 
     public ArrayType(BigInteger beginTab, BigInteger endTab) throws IllegalArgumentException{
-        long tmp1 = endTab.longValueExact();
-        long tmp2 = beginTab.longValueExact();
-        long tabSize = tmp1 - tmp2 + 1;
-        if (tabSize > maxArrSize) throw new IllegalArgumentException("The maximum size of an array is "+maxArrSize);
-        this.beginTab = (int) tmp2;
-        this.endTab = (int)tmp1;
-        this.tab = new BigInteger[(int) tabSize];
-        this.shift = -this.beginTab;
+        BigInteger arrSize = endTab.subtract(beginTab).add(new BigInteger("1"));
+        if (Validation.isGreaterThanMaxInt(arrSize)) throw new IllegalArgumentException("The maximum size of an array is "+Integer.MAX_VALUE);
+        int tabSize = arrSize.intValue();
+        this.beginTab = beginTab;
+        this.endTab = endTab;
+        this.tab = new BigInteger[tabSize];
+        this.shift = this.beginTab.negate();
     }
 
 
-    public void setValAtIndex(int indx, BigInteger value) throws ArrayIndexOutOfBoundsException {
-        if (beginTab > indx || indx > endTab) {
+    public void setValAtIndex(BigInteger indx, BigInteger value) throws ArrayIndexOutOfBoundsException {
+        if (beginTab.compareTo(indx) > 0|| indx.compareTo(endTab) > 0) {
             throw new ArrayIndexOutOfBoundsException("Attempting to access a non-existing index: "+indx);
         }
-        this.tab[shift + indx] = value;
+        int shiftedIndex = shift.add(indx).intValue();
+        this.tab[shiftedIndex] = value;
     }
 
-    public BigInteger getValAtIndex(int indx) throws ArrayIndexOutOfBoundsException {
-        if (beginTab > indx || indx > endTab) {
+    public BigInteger getValAtIndex(BigInteger indx) throws ArrayIndexOutOfBoundsException {
+        if (beginTab.compareTo(indx) > 0|| indx.compareTo(endTab) > 0) {
             throw new ArrayIndexOutOfBoundsException("Attempting to access a non-existing index: "+indx);
         }
-        return this.tab[shift + indx];
+        int shiftedIndex = shift.add(indx).intValue();
+        return this.tab[shiftedIndex];
     }
 
     @Override

@@ -9,16 +9,18 @@
 
 %code imports {
 import compiler.holder.TokenInfo;
+import compiler.holder.types.VariableType;
 import compiler.validation.Validation;
-
+import compiler.utility.ColorMessage;
+import static compiler.utility.ColorMessage.makeColor;
 import java.math.BigInteger;
 }
 
 %code{
 
-  /**
-   * ===================================================================================
-   */
+  public void color(String msg){
+    System.out.println("\u001b[32m"+msg+"\u001B[0m");
+  }
    private static CompilerFlex scanner = null;
    private static  Validation validation;
 
@@ -86,7 +88,8 @@ program:        DECLARE declarations BEGIN commands END {}
               | BEGIN commands END {}
 ;
 declarations:  declarations COMMA PIDENTIFIER {
-                this.validation.validateNewPids((TokenInfo)$3);
+                /*System.out.println("\u001b[48;5;160m Ustawiam w ddeclarations COMMA PIDENTIFIER : "+$3+"na VAR\u001b[0m");*/
+                this.validation.validateNewPids((TokenInfo)$3, VariableType.VAR);
               }
 
               | declarations COMMA PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET {
@@ -96,11 +99,10 @@ declarations:  declarations COMMA PIDENTIFIER {
 
               }
               | PIDENTIFIER {
-                this.validation.validateNewPids((TokenInfo)$1);
+               this.validation.validateNewPids((TokenInfo)$1, VariableType.VAR);
               }
 
               | PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET {
-
                 /** Array declarations control */
                 BigInteger beginArray = (BigInteger)((TokenInfo)$3).getSemanticValue();
                 BigInteger endArray = (BigInteger)(((TokenInfo)$5).getSemanticValue());
@@ -110,22 +112,33 @@ declarations:  declarations COMMA PIDENTIFIER {
 commands:       commands command {}
               | command {}
 ;
-command:        identifier ASSIGN expression SEMICOLON { /*System.out.println(" przypisanie wartości w linijce : "+scanner.getYyline());*/}
+command:        identifier ASSIGN expression SEMICOLON {
+                 TokenInfo tokenInfo =(TokenInfo) $1;
+                 tokenInfo = this.validation.assign((TokenInfo) $1,(TokenInfo) $3);
+                 makeColor(ColorMessage.BLUE,"identifier : "+$1+"  expression : "+$3);
+                 makeColor(ColorMessage.BLUE,"after change : "+tokenInfo);
+                }
               | IF condition THEN commands ELSE commands ENDIF {}
               | IF condition THEN commands ENDIF {}
               | WHILE condition DO commands ENDWHILE {}
               | DO commands WHILE condition ENDDO {}
-              | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR {}
+              | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR {
+              }
+
               | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
               | READ identifier SEMICOLON {
                 validation.validationOfVariableValues((TokenInfo)$1);
               }
               | WRITE value SEMICOLON {
-                System.out.println("Very important info00o !!!"+$2);
+                this.validation.validateToWriteToken((TokenInfo)$2);
               }
 ;
 expression:     value {/** value */}
-              | value PLUS value { /** value PLUS value */}
+              | value PLUS value {
+                this.validation.add((TokenInfo)$$,(TokenInfo)$3);
+                makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+$$+" $1 = "+ $1+" $2 =  "+$3);
+              }
+
               | value MINUS value {/** value MINUS value */}
               | value TIMES value {/** value TIMES value */}
               | value DIV value {/** value DIV value */}
@@ -138,10 +151,22 @@ condition:      value EQ value {/** value EQ value */}
               | value LEQ value {/** value LEQ value */}
               | value GEQ value {/** value GEQ value */}
 ;
-value:          NUM { System.out.println("Mam numerek :D ");}
-              | identifier {/** value */}
+value:          NUM {
+                     ((TokenInfo)$1).setValue((BigInteger)((TokenInfo)$1).getSemanticValue());
+                     makeColor(ColorMessage.PINK,"NUM "+$$);
+               }
+              | identifier {makeColor(ColorMessage.PINK,"value.identifier "+$$);}
 ;
-identifier:     PIDENTIFIER { }
-              | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {}
-              | PIDENTIFIER L_BRACKET NUM R_BRACKET     {/*System.out.println("\u001b[48;5;160m Inicjalizacja tablicy \u001b[0m");*/}
+identifier:     PIDENTIFIER {
+                this.validation.getValueFromToken((TokenInfo)$1);
+                makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER "+$$);
+                }
+
+              | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {
+                this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
+                makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
+              }
+              | PIDENTIFIER L_BRACKET NUM R_BRACKET{
+                   this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
+              }
 %%

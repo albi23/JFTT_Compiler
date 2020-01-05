@@ -38,11 +38,13 @@ package compiler;
 /* "compiler.y":10  */ /* lalr1.java:92  */
 
 import compiler.holder.TokenInfo;
+import compiler.holder.types.VariableType;
 import compiler.validation.Validation;
-
+import compiler.utility.ColorMessage;
+import static compiler.utility.ColorMessage.makeColor;
 import java.math.BigInteger;
 
-/* "CompilerBison.java":46  */ /* lalr1.java:92  */
+/* "CompilerBison.java":48  */ /* lalr1.java:92  */
 
 /**
  * A Bison parser, automatically generated from <tt>compiler.y</tt>.
@@ -401,30 +403,31 @@ import java.math.BigInteger;
       {
           case 2:
   if (yyn == 2)
-    /* "compiler.y":85  */ /* lalr1.java:480  */
+    /* "compiler.y":87  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 3:
   if (yyn == 3)
-    /* "compiler.y":86  */ /* lalr1.java:480  */
+    /* "compiler.y":88  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 4:
   if (yyn == 4)
-    /* "compiler.y":88  */ /* lalr1.java:480  */
+    /* "compiler.y":90  */ /* lalr1.java:480  */
     {
-                this.validation.validateNewPids((TokenInfo)yystack.valueAt (0));
+                /*System.out.println("\u001b[48;5;160m Ustawiam w ddeclarations COMMA PIDENTIFIER : "+$3+"na VAR\u001b[0m");*/
+                this.validation.validateNewPids((TokenInfo)yystack.valueAt (0), VariableType.VAR);
               };
   break;
     
 
   case 5:
   if (yyn == 5)
-    /* "compiler.y":92  */ /* lalr1.java:480  */
+    /* "compiler.y":95  */ /* lalr1.java:480  */
     {
                 BigInteger beginArray = (BigInteger)((TokenInfo)yystack.valueAt (3)).getSemanticValue();
                 BigInteger endArray = (BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue());
@@ -436,18 +439,17 @@ import java.math.BigInteger;
 
   case 6:
   if (yyn == 6)
-    /* "compiler.y":98  */ /* lalr1.java:480  */
+    /* "compiler.y":101  */ /* lalr1.java:480  */
     {
-                this.validation.validateNewPids((TokenInfo)yystack.valueAt (0));
+               this.validation.validateNewPids((TokenInfo)yystack.valueAt (0), VariableType.VAR);
               };
   break;
     
 
   case 7:
   if (yyn == 7)
-    /* "compiler.y":102  */ /* lalr1.java:480  */
+    /* "compiler.y":105  */ /* lalr1.java:480  */
     {
-
                 /** Array declarations control */
                 BigInteger beginArray = (BigInteger)((TokenInfo)yystack.valueAt (3)).getSemanticValue();
                 BigInteger endArray = (BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue());
@@ -458,70 +460,75 @@ import java.math.BigInteger;
 
   case 8:
   if (yyn == 8)
-    /* "compiler.y":110  */ /* lalr1.java:480  */
+    /* "compiler.y":112  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 9:
   if (yyn == 9)
-    /* "compiler.y":111  */ /* lalr1.java:480  */
+    /* "compiler.y":113  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 10:
   if (yyn == 10)
-    /* "compiler.y":113  */ /* lalr1.java:480  */
-    { /*System.out.println(" przypisanie wartości w linijce : "+scanner.getYyline());*/};
+    /* "compiler.y":115  */ /* lalr1.java:480  */
+    {
+                 TokenInfo tokenInfo =(TokenInfo) yystack.valueAt (3);
+                 tokenInfo = this.validation.assign((TokenInfo) yystack.valueAt (3),(TokenInfo) yystack.valueAt (1));
+                 makeColor(ColorMessage.BLUE,"identifier : "+yystack.valueAt (3)+"  expression : "+yystack.valueAt (1));
+                 makeColor(ColorMessage.BLUE,"after change : "+tokenInfo);
+                };
   break;
     
 
   case 11:
   if (yyn == 11)
-    /* "compiler.y":114  */ /* lalr1.java:480  */
+    /* "compiler.y":121  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 12:
   if (yyn == 12)
-    /* "compiler.y":115  */ /* lalr1.java:480  */
+    /* "compiler.y":122  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 13:
   if (yyn == 13)
-    /* "compiler.y":116  */ /* lalr1.java:480  */
+    /* "compiler.y":123  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 14:
   if (yyn == 14)
-    /* "compiler.y":117  */ /* lalr1.java:480  */
+    /* "compiler.y":124  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 15:
   if (yyn == 15)
-    /* "compiler.y":118  */ /* lalr1.java:480  */
+    /* "compiler.y":125  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 16:
   if (yyn == 16)
-    /* "compiler.y":119  */ /* lalr1.java:480  */
+    /* "compiler.y":126  */ /* lalr1.java:480  */
     {};
   break;
     
 
   case 17:
   if (yyn == 17)
-    /* "compiler.y":120  */ /* lalr1.java:480  */
+    /* "compiler.y":127  */ /* lalr1.java:480  */
     {
                 validation.validationOfVariableValues((TokenInfo)yystack.valueAt (2));
               };
@@ -530,134 +537,149 @@ import java.math.BigInteger;
 
   case 18:
   if (yyn == 18)
-    /* "compiler.y":123  */ /* lalr1.java:480  */
+    /* "compiler.y":130  */ /* lalr1.java:480  */
     {
-                System.out.println("Very important info00o !!!"+yystack.valueAt (1));
+                this.validation.validateToWriteToken((TokenInfo)yystack.valueAt (1));
               };
   break;
     
 
   case 19:
   if (yyn == 19)
-    /* "compiler.y":127  */ /* lalr1.java:480  */
+    /* "compiler.y":134  */ /* lalr1.java:480  */
     {/** value */};
   break;
     
 
   case 20:
   if (yyn == 20)
-    /* "compiler.y":128  */ /* lalr1.java:480  */
-    { /** value PLUS value */};
+    /* "compiler.y":135  */ /* lalr1.java:480  */
+    {
+                this.validation.add((TokenInfo)yyval,(TokenInfo)yystack.valueAt (0));
+                makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+yyval+" $1 = "+ yystack.valueAt (2)+" $2 =  "+yystack.valueAt (0));
+              };
   break;
     
 
   case 21:
   if (yyn == 21)
-    /* "compiler.y":129  */ /* lalr1.java:480  */
+    /* "compiler.y":140  */ /* lalr1.java:480  */
     {/** value MINUS value */};
   break;
     
 
   case 22:
   if (yyn == 22)
-    /* "compiler.y":130  */ /* lalr1.java:480  */
+    /* "compiler.y":141  */ /* lalr1.java:480  */
     {/** value TIMES value */};
   break;
     
 
   case 23:
   if (yyn == 23)
-    /* "compiler.y":131  */ /* lalr1.java:480  */
+    /* "compiler.y":142  */ /* lalr1.java:480  */
     {/** value DIV value */};
   break;
     
 
   case 24:
   if (yyn == 24)
-    /* "compiler.y":132  */ /* lalr1.java:480  */
+    /* "compiler.y":143  */ /* lalr1.java:480  */
     {/** value MOD value */};
   break;
     
 
   case 25:
   if (yyn == 25)
-    /* "compiler.y":134  */ /* lalr1.java:480  */
+    /* "compiler.y":145  */ /* lalr1.java:480  */
     {/** value EQ value */};
   break;
     
 
   case 26:
   if (yyn == 26)
-    /* "compiler.y":135  */ /* lalr1.java:480  */
+    /* "compiler.y":146  */ /* lalr1.java:480  */
     {/** value NEQ value */};
   break;
     
 
   case 27:
   if (yyn == 27)
-    /* "compiler.y":136  */ /* lalr1.java:480  */
+    /* "compiler.y":147  */ /* lalr1.java:480  */
     {/** value LE value */};
   break;
     
 
   case 28:
   if (yyn == 28)
-    /* "compiler.y":137  */ /* lalr1.java:480  */
+    /* "compiler.y":148  */ /* lalr1.java:480  */
     {/** value GE value */};
   break;
     
 
   case 29:
   if (yyn == 29)
-    /* "compiler.y":138  */ /* lalr1.java:480  */
+    /* "compiler.y":149  */ /* lalr1.java:480  */
     {/** value LEQ value */};
   break;
     
 
   case 30:
   if (yyn == 30)
-    /* "compiler.y":139  */ /* lalr1.java:480  */
+    /* "compiler.y":150  */ /* lalr1.java:480  */
     {/** value GEQ value */};
   break;
     
 
   case 31:
   if (yyn == 31)
-    /* "compiler.y":141  */ /* lalr1.java:480  */
-    { System.out.println("Mam numerek :D ");};
+    /* "compiler.y":152  */ /* lalr1.java:480  */
+    {
+                     ((TokenInfo)yystack.valueAt (0)).setValue((BigInteger)((TokenInfo)yystack.valueAt (0)).getSemanticValue());
+                     makeColor(ColorMessage.PINK,"NUM "+yyval);
+               };
   break;
     
 
   case 32:
   if (yyn == 32)
-    /* "compiler.y":142  */ /* lalr1.java:480  */
-    {/** value */};
+    /* "compiler.y":156  */ /* lalr1.java:480  */
+    {
+      makeColor(ColorMessage.PINK,"value.identifier "+yyval);};
   break;
     
 
   case 33:
   if (yyn == 33)
-    /* "compiler.y":144  */ /* lalr1.java:480  */
-    { };
+    /* "compiler.y":158  */ /* lalr1.java:480  */
+    {
+                this.validation.getValueFromToken((TokenInfo)yystack.valueAt (0));
+//                makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER "+yyval);
+                };
   break;
     
 
   case 34:
   if (yyn == 34)
-    /* "compiler.y":145  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":163  */ /* lalr1.java:480  */
+    {
+      makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+yyval);
+                this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(TokenInfo)yystack.valueAt (1) );
+              };
   break;
     
 
   case 35:
   if (yyn == 35)
-    /* "compiler.y":146  */ /* lalr1.java:480  */
-    {/*System.out.println("\u001b[48;5;160m Inicjalizacja tablicy \u001b[0m");*/};
+    /* "compiler.y":167  */ /* lalr1.java:480  */
+    {
+                   this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue()) );
+              };
   break;
     
 
 
-/* "CompilerBison.java":661  */ /* lalr1.java:480  */
+/* "CompilerBison.java":682  */ /* lalr1.java:480  */
         default: break;
       }
 
@@ -1277,10 +1299,10 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new short[]
     {
-       0,    85,    85,    86,    88,    92,    98,   102,   110,   111,
-     113,   114,   115,   116,   117,   118,   119,   120,   123,   127,
-     128,   129,   130,   131,   132,   134,   135,   136,   137,   138,
-     139,   141,   142,   144,   145,   146
+       0,    87,    87,    88,    90,    95,   101,   105,   112,   113,
+     115,   121,   122,   123,   124,   125,   126,   127,   130,   134,
+     135,   140,   141,   142,   143,   145,   146,   147,   148,   149,
+     150,   152,   156,   158,   163,   167
     };
   }
 
@@ -1365,12 +1387,12 @@ private static final byte yycheck_[] = yycheck_init();
 
 /* User implementation code.  */
 /* Unqualified %code blocks.  */
-/* "compiler.y":17  */ /* lalr1.java:1056  */
+/* "compiler.y":19  */ /* lalr1.java:1056  */
 
 
-  /**
-   * ===================================================================================
-   */
+  public void color(String msg){
+    System.out.println("\u001b[32m"+msg+"\u001B[0m");
+  }
    private static CompilerFlex scanner = null;
    private static  Validation validation;
 
@@ -1417,9 +1439,9 @@ private static final byte yycheck_[] = yycheck_init();
        }
    
 
-/* "CompilerBison.java":1421  */ /* lalr1.java:1056  */
+/* "CompilerBison.java":1442  */ /* lalr1.java:1056  */
 
 }
 
-/* "compiler.y":147  */ /* lalr1.java:1060  */
+/* "compiler.y":170  */ /* lalr1.java:1060  */
 

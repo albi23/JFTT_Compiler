@@ -43,7 +43,7 @@ numbers = 0|[1-9][0-9]*|-[1-9][0-9]*
 \n            { /* Do nothing */ }
 {numbers}       {
                  if (tokenInfo.getTokenId() == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
-                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1);
+                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1, NUM);
                  return NUM;
                 }
 "DECLARE"     {
