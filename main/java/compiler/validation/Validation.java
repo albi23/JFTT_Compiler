@@ -5,6 +5,7 @@ import compiler.CompilerFlex;
 import compiler.holder.TokenInfo;
 import compiler.holder.TypeHolder;
 import compiler.holder.types.ArrayType;
+import compiler.holder.types.SimpleType;
 import compiler.holder.types.VariableType;
 
 import java.math.BigInteger;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class Validation {
 
-    private Map<String, TokenInfo> pidIdOnInfo = new HashMap<>(100);
+    public Map<String, TokenInfo> pidIdOnInfo = new HashMap<>(100);
     private CompilerFlex scanner;
 
     public Validation(CompilerFlex scanner) {
@@ -63,7 +64,7 @@ public class Validation {
     public <V> void validateToWriteToken(TokenInfo<V> tokenInfo){
 
         System.out.println("\u001b[48;5;28mvalidateToWriteToken : "+tokenInfo+"\u001b[0m");
-        if (tokenInfo.getTokenId() != CompilerBison.Lexer.NUM){
+        if (!(tokenInfo.getSemanticValue() instanceof BigInteger)){ // only num token has semantic of BigInt
             try {
                 // Get from map all token info data - if not present we have try to access to undefined var
                 TypeHolder type = this.pidIdOnInfo.get(tokenInfo.getSemanticValue()).getType();
@@ -87,17 +88,21 @@ public class Validation {
         }
     }
 
-    public <V> void getArrValueFromToken(TokenInfo<V> firstToken,TokenInfo<V> secondToken){
+    public <V> void getArrValueFromToken(TokenInfo<V> firstToken,TokenInfo<V> indexHolder){
         try {
-            BigInteger index = this.pidIdOnInfo.get(secondToken.getSemanticValue()).getValue();
-            if (index == null) showErrMsg("use of uninitialized variable "+secondToken.getSemanticValue(),secondToken.getLinePos());
-            this.getArrValueFromToken(firstToken,index);
+            TokenInfo<V> tempIndexHolder = this.pidIdOnInfo.get(indexHolder.getSemanticValue());
+            if (tempIndexHolder.getValue() == null && tempIndexHolder.getType() instanceof SimpleType) return;
+            if (tempIndexHolder.getValue() == null ) showErrMsg("use of uninitialized variable "+indexHolder.getSemanticValue(),indexHolder.getLinePos());
+            this.getArrValueFromToken(firstToken,tempIndexHolder.getValue() );
         }catch (NullPointerException ex){
-            showErrMsg("use of uninitialized variable "+secondToken.getSemanticValue(),secondToken.getLinePos());
+            showErrMsg("use of uninitialized variable "+indexHolder.getSemanticValue(),indexHolder.getLinePos());
         }
     }
 
     public <V> void getValueFromToken(TokenInfo<V> tokenInfo){
+//        if (tokenInfo.getType() instanceof SimpleType){
+//            return;
+//        }
         try {
             tokenInfo.setValue(this.pidIdOnInfo.get(tokenInfo.getSemanticValue()).getValue());
         }catch (NullPointerException ex){
@@ -110,15 +115,36 @@ public class Validation {
 
     /** Arithmetic operations */
 
-    public static  <V> void  add(TokenInfo<V> first, TokenInfo<V> second){
-        first.setValue(first.getValue().add(second.getValue()));
+    public   <V> void  add(TokenInfo<V> first, TokenInfo<V> second){
+        TokenInfo<V> firstToken = pidIdOnInfo.get(first.getSemanticValue());
+        TokenInfo<V> secondToken = pidIdOnInfo.get(second.getSemanticValue());
+        if (firstToken.getType() instanceof SimpleType && secondToken.getType() instanceof SimpleType){
+            ((SimpleType) firstToken.getType()).setCurrentValue(((SimpleType) secondToken.getType()).getCurrentValue().add(((SimpleType) secondToken.getType()).getCurrentValue()));
+        }else if (firstToken.getType() instanceof SimpleType){
+            ((SimpleType) firstToken.getType()).setCurrentValue(secondToken.getValue().add(((SimpleType) firstToken.getType()).getCurrentValue()));
+        }else if (secondToken.getType() instanceof SimpleType){
+            first.setValue(((SimpleType) secondToken.getType()).getCurrentValue().add(firstToken.getValue()));
+        }else{
+            firstToken.setValue(secondToken.getValue().add(secondToken.getValue()));
+        }
     };
 
     public  <V> TokenInfo<V> assign(TokenInfo<V> token,TokenInfo<V> valueHolder ){
         TokenInfo<V> tokenInfo = null;
         try {
+
             tokenInfo = this.pidIdOnInfo.get(token.getSemanticValue());
-            tokenInfo.setValue(valueHolder.getValue());
+            TokenInfo<V> tokenInfo1 = this.pidIdOnInfo.get(valueHolder.getSemanticValue());
+            if (tokenInfo.getType() instanceof  SimpleType &&tokenInfo1.getType() instanceof SimpleType){
+                ((SimpleType) tokenInfo.getType()).setCurrentValue(((SimpleType) tokenInfo1.getType()).getCurrentValue());
+            }else if(tokenInfo.getType() instanceof SimpleType) {
+                ((SimpleType) tokenInfo.getType()).setCurrentValue(valueHolder.getValue());
+            }else if (tokenInfo1 != null && tokenInfo1.getType() instanceof SimpleType){
+                tokenInfo.setValue(((SimpleType) tokenInfo1.getType()).getCurrentValue());
+            }else {
+                tokenInfo.setValue(valueHolder.getValue());
+            }
+
         }catch (NullPointerException ex){
             showErrMsg("use of uninitialized variable "+token.getSemanticValue(),token.getLinePos());
         }

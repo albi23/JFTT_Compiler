@@ -303,6 +303,12 @@ public class CompilerFlex implements CompilerBison.Lexer {
     return zzAtBOL;
   };
 
+  private int setLastTokenAndReturn(int id){
+    lastTokenId = id;
+    return id;
+  }
+
+  private int lastTokenId = -1;
   private compiler.holder.TokenInfo tokenInfo;
 
 
@@ -712,7 +718,7 @@ public class CompilerFlex implements CompilerBison.Lexer {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ERROR;
+                return setLastTokenAndReturn(ERROR);
             } 
             // fall through
           case 41: break;
@@ -722,15 +728,15 @@ public class CompilerFlex implements CompilerBison.Lexer {
             // fall through
           case 42: break;
           case 3: 
-            { tokenInfo = new TokenInfo<>(yytext(),yyline+1, PIDENTIFIER);
-                return PIDENTIFIER;
+            { tokenInfo = new TokenInfo<>(yytext(),yyline+1, lastTokenId);
+                return setLastTokenAndReturn(PIDENTIFIER);
             } 
             // fall through
           case 43: break;
           case 4: 
-            { if (tokenInfo.getTokenId() == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
-                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1, NUM);
-                 return NUM;
+            { if (lastTokenId == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
+                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1, lastTokenId);
+                 return setLastTokenAndReturn(NUM);
             } 
             // fall through
           case 44: break;
@@ -741,211 +747,211 @@ public class CompilerFlex implements CompilerBison.Lexer {
           case 45: break;
           case 6: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return COMMA;
+                return setLastTokenAndReturn(COMMA);
             } 
             // fall through
           case 46: break;
           case 7: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return L_BRACKET;
+                return setLastTokenAndReturn(L_BRACKET);
             } 
             // fall through
           case 47: break;
           case 8: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return R_BRACKET;
+                return setLastTokenAndReturn(R_BRACKET);
             } 
             // fall through
           case 48: break;
           case 9: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return SEMICOLON;
+                return setLastTokenAndReturn(SEMICOLON);
             } 
             // fall through
           case 49: break;
           case 10: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return COLON;
+                return setLastTokenAndReturn(COLON);
             } 
             // fall through
           case 50: break;
           case 11: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DO;
+                return setLastTokenAndReturn(DO);
             } 
             // fall through
           case 51: break;
           case 12: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return EQ;
+                return setLastTokenAndReturn(EQ);
             } 
             // fall through
           case 52: break;
           case 13: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return LE;
+                return setLastTokenAndReturn(LE);
             } 
             // fall through
           case 53: break;
           case 14: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return GE;
+                return setLastTokenAndReturn(GE);
             } 
             // fall through
           case 54: break;
           case 15: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return IF;
+                return setLastTokenAndReturn(IF);
             } 
             // fall through
           case 55: break;
           case 16: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return TO;
+                return setLastTokenAndReturn(TO);
             } 
             // fall through
           case 56: break;
           case 17: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DIV;
+                return setLastTokenAndReturn(DIV);
             } 
             // fall through
           case 57: break;
           case 18: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return END;
+                return setLastTokenAndReturn(END);
             } 
             // fall through
           case 58: break;
           case 19: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return LEQ;
+                return setLastTokenAndReturn(LEQ);
             } 
             // fall through
           case 59: break;
           case 20: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return GEQ;
+                return setLastTokenAndReturn(GEQ);
             } 
             // fall through
           case 60: break;
           case 21: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return NEQ;
+                return setLastTokenAndReturn(NEQ);
             } 
             // fall through
           case 61: break;
           case 22: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return FOR;
+                return setLastTokenAndReturn(FOR);
             } 
             // fall through
           case 62: break;
           case 23: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return MOD;
+                return setLastTokenAndReturn(MOD);
             } 
             // fall through
           case 63: break;
           case 24: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ELSE;
+                return setLastTokenAndReturn(ELSE);
             } 
             // fall through
           case 64: break;
           case 25: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return READ;
+                return setLastTokenAndReturn(READ);
             } 
             // fall through
           case 65: break;
           case 26: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return FROM;
+                return setLastTokenAndReturn(FROM);
             } 
             // fall through
           case 66: break;
           case 27: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return THEN;
+                return setLastTokenAndReturn(THEN);
             } 
             // fall through
           case 67: break;
           case 28: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return PLUS;
+                return setLastTokenAndReturn(PLUS);
             } 
             // fall through
           case 68: break;
           case 29: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDDO;
+                return setLastTokenAndReturn(ENDDO);
             } 
             // fall through
           case 69: break;
           case 30: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDIF;
+                return setLastTokenAndReturn(ENDIF);
             } 
             // fall through
           case 70: break;
           case 31: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return BEGIN;
+                return setLastTokenAndReturn(BEGIN);
             } 
             // fall through
           case 71: break;
           case 32: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return TIMES;
+                return setLastTokenAndReturn(TIMES);
             } 
             // fall through
           case 72: break;
           case 33: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return WRITE;
+                return setLastTokenAndReturn(WRITE);
             } 
             // fall through
           case 73: break;
           case 34: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return WHILE;
+                return setLastTokenAndReturn(WHILE);
             } 
             // fall through
           case 74: break;
           case 35: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return MINUS;
+                return setLastTokenAndReturn(MINUS);
             } 
             // fall through
           case 75: break;
           case 36: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DOWNTO;
+                return setLastTokenAndReturn(DOWNTO);
             } 
             // fall through
           case 76: break;
           case 37: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDFOR;
+                return setLastTokenAndReturn(ENDFOR);
             } 
             // fall through
           case 77: break;
           case 38: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ASSIGN;
+                return setLastTokenAndReturn(ASSIGN);
             } 
             // fall through
           case 78: break;
           case 39: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DECLARE;
+                return setLastTokenAndReturn(DECLARE);
             } 
             // fall through
           case 79: break;
           case 40: 
             { tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDWHILE;
+                return setLastTokenAndReturn(ENDWHILE);
             } 
             // fall through
           case 80: break;

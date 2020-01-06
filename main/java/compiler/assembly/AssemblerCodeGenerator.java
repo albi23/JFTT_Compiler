@@ -14,9 +14,8 @@ public class AssemblerCodeGenerator {
         while (numberDeclarations[3] > 1){
             if (numberDeclarations[3] % 2 == 1 ){
                 commands.push("INC");
-                commands.push("SHIFT 1");
-            }else{
-                commands.push("SHIFT 1");}
+            }
+            commands.push("SHIFT 1");
             numberDeclarations[3] = numberDeclarations[3]/2;
             if (verbose)System.out.println("Value "+ numberDeclarations[3]);
         }

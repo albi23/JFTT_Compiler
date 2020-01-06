@@ -11,18 +11,18 @@ public class TokenInfo<V> {
     private VariableType variableType;
     private BigInteger value;
     private int linePos;
-    private int tokenId;
+    private int beforeTokenId;
 
     public TokenInfo(V semanticValue, int linePos) {
         this.semanticValue = semanticValue;
         this.linePos = linePos;
-        this.tokenId = -1;
+        this.beforeTokenId = -1;
     }
 
-    public TokenInfo(V semanticValue, int linePos, int tokenId) {
+    public TokenInfo(V semanticValue, int linePos, int beforeTokenId) {
         this.semanticValue = semanticValue;
         this.linePos = linePos;
-        this.tokenId = tokenId;
+        this.beforeTokenId = beforeTokenId;
     }
     public V getSemanticValue() {
         return semanticValue;
@@ -31,8 +31,8 @@ public class TokenInfo<V> {
         return linePos;
     }
 
-    public int getTokenId() {
-        return tokenId;
+    public int getBeforeTokenId() {
+        return beforeTokenId;
     }
 
     public void setType(TypeHolder type) {
@@ -67,7 +67,7 @@ public class TokenInfo<V> {
                 ", variableType=" + variableType +
                 ", value=" + value +
                 ", linePos=" + linePos +
-                ", tokenId=" + tokenId +
+                ", tokenId=" + beforeTokenId +
                 '}';
     }
 }

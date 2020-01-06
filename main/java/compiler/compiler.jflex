@@ -27,6 +27,12 @@ import java.math.BigInteger;
     return zzAtBOL;
   };
 
+  private int setLastTokenAndReturn(int id){
+    lastTokenId = id;
+    return id;
+  }
+
+  private int lastTokenId = -1;
   private compiler.holder.TokenInfo tokenInfo;
 
 %}
@@ -42,119 +48,119 @@ numbers = 0|[1-9][0-9]*|-[1-9][0-9]*
 {comment}     	            {/* Do nothing */}
 \n            { /* Do nothing */ }
 {numbers}       {
-                 if (tokenInfo.getTokenId() == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
-                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1, NUM);
-                 return NUM;
+                 if (lastTokenId == PIDENTIFIER) yyerror("Error in line "+(yyline+1)+": unrecognized inscription "+yytext());
+                 tokenInfo = new TokenInfo<>(new BigInteger(yytext()),yyline+1, lastTokenId);
+                 return setLastTokenAndReturn(NUM);
                 }
 "DECLARE"     {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DECLARE;}
+                return setLastTokenAndReturn(DECLARE);}
 {pidentifier} {
-                tokenInfo = new TokenInfo<>(yytext(),yyline+1, PIDENTIFIER);
-                return PIDENTIFIER; }
+                tokenInfo = new TokenInfo<>(yytext(),yyline+1, lastTokenId);
+                return setLastTokenAndReturn(PIDENTIFIER); }
 "BEGIN"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return BEGIN; }
+                return setLastTokenAndReturn(BEGIN); }
 "END"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return END; }
+                return setLastTokenAndReturn(END); }
 "ASSIGN"      {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ASSIGN; }
+                return setLastTokenAndReturn(ASSIGN); }
 "IF"          {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return IF; }
+                return setLastTokenAndReturn(IF); }
 "THEN"        {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return THEN; }
+                return setLastTokenAndReturn(THEN); }
 "ELSE"        {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ELSE; }
+                return setLastTokenAndReturn(ELSE); }
 "ENDIF"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDIF; }
+                return setLastTokenAndReturn(ENDIF); }
 "WHILE"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return WHILE; }
+                return setLastTokenAndReturn(WHILE); }
 "DO"          {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DO; }
+                return setLastTokenAndReturn(DO); }
 "ENDWHILE"    {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDWHILE; }
+                return setLastTokenAndReturn(ENDWHILE); }
 "ENDDO"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDDO; }
+                return setLastTokenAndReturn(ENDDO); }
 "FOR"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return FOR; }
+                return setLastTokenAndReturn(FOR); }
 "FROM"        {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return FROM; }
+                return setLastTokenAndReturn(FROM); }
 "TO"          {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return TO; }
+                return setLastTokenAndReturn(TO); }
 "ENDFOR"      {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ENDFOR; }
+                return setLastTokenAndReturn(ENDFOR); }
 "DOWNTO"      {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DOWNTO; }
+                return setLastTokenAndReturn(DOWNTO); }
 "READ"        {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return READ; }
+                return setLastTokenAndReturn(READ); }
 "WRITE"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return WRITE; }
+                return setLastTokenAndReturn(WRITE); }
 "PLUS"        {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return PLUS; }
+                return setLastTokenAndReturn(PLUS); }
 "MINUS"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return MINUS; }
+                return setLastTokenAndReturn(MINUS); }
 "TIMES"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return TIMES; }
+                return setLastTokenAndReturn(TIMES); }
 "DIV"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return DIV; }
+                return setLastTokenAndReturn(DIV); }
 "MOD"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return MOD; }
+                return setLastTokenAndReturn(MOD); }
 "EQ"          {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return EQ; }
+                return setLastTokenAndReturn(EQ); }
 "NEQ"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return NEQ; }
+                return setLastTokenAndReturn(NEQ); }
 "LE"          {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return LE; }
+                return setLastTokenAndReturn(LE); }
 "GE"          {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return GE; }
+                return setLastTokenAndReturn(GE); }
 "LEQ"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return LEQ; }
+                return setLastTokenAndReturn(LEQ); }
 "GEQ"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return GEQ; }
+                return setLastTokenAndReturn(GEQ); }
 ,             {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return COMMA;}
+                return setLastTokenAndReturn(COMMA);}
 \(            {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return L_BRACKET; }
+                return setLastTokenAndReturn(L_BRACKET); }
 \)            {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return R_BRACKET; }
+                return setLastTokenAndReturn(R_BRACKET); }
 ;             {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return SEMICOLON;  }
+                return setLastTokenAndReturn(SEMICOLON);  }
 :             {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return COLON;  }
+                return setLastTokenAndReturn(COLON);  }
 .             {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return ERROR; }
+                return setLastTokenAndReturn(ERROR); }
 

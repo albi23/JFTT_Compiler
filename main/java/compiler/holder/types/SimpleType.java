@@ -6,17 +6,35 @@ import java.math.BigInteger;
 
 public class SimpleType implements TypeHolder {
 
-    private BigInteger value;
+    private BigInteger beginValue;
+    private BigInteger endValue;
+    private BigInteger currentValue;
 
-    public SimpleType(BigInteger value) {
-        this.value = value;
+    public SimpleType(BigInteger beginValue) {
+        this.beginValue = beginValue;
     }
 
-    public BigInteger getValue() {
-        return value;
+    public BigInteger getBeginValue() {
+        return beginValue;
     }
 
-    public void setValue(BigInteger value) {
-        this.value = value;
+    public void setBeginValue(BigInteger beginValue) {
+        this.beginValue = beginValue;
+    }
+
+    public BigInteger getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(BigInteger currentValue) {
+        this.currentValue = currentValue;
+    }
+
+    public BigInteger getEndValue() {
+        return endValue;
+    }
+
+    public void setEndValue(BigInteger endValue) {
+        this.endValue = endValue;
     }
 }

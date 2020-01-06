@@ -9,6 +9,7 @@
 
 %code imports {
 import compiler.holder.TokenInfo;
+import compiler.holder.types.SimpleType;
 import compiler.holder.types.VariableType;
 import compiler.validation.Validation;
 import compiler.utility.ColorMessage;
@@ -109,23 +110,35 @@ declarations:  declarations COMMA PIDENTIFIER {
                 this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) $1);
               }
 ;
-commands:       commands command {}
-              | command {}
+commands:       commands command {
+                    System.out.println("Mamy komendy : "+(TokenInfo)$1+"\n oraz : "+(TokenInfo)$2);
+                }
+              | command {
+                     System.out.println("Mamy komendę : "+(TokenInfo)$1);
+               }
 ;
 command:        identifier ASSIGN expression SEMICOLON {
                  TokenInfo tokenInfo =(TokenInfo) $1;
                  tokenInfo = this.validation.assign((TokenInfo) $1,(TokenInfo) $3);
-                 makeColor(ColorMessage.BLUE,"identifier : "+$1+"  expression : "+$3);
-                 makeColor(ColorMessage.BLUE,"after change : "+tokenInfo);
+                 //makeColor(ColorMessage.BLUE,"identifier : "+$1+"  expression : "+$3);
+                 //makeColor(ColorMessage.BLUE,"after change : "+tokenInfo);
                 }
               | IF condition THEN commands ELSE commands ENDIF {}
               | IF condition THEN commands ENDIF {}
               | WHILE condition DO commands ENDWHILE {}
               | DO commands WHILE condition ENDDO {}
               | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR {
+
+                System.out.println("Iterujemy za pomocą  :"+$2);
+                System.out.println("FROM                 :"+$4);
+                System.out.println("TO                   : "+$6);
               }
 
-              | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
+              | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {
+                System.out.println("Iterujemy za pomocą  :"+$2);
+                System.out.println("FROM                 :"+$4);
+                System.out.println("TO                   : "+$6);
+                }
               | READ identifier SEMICOLON {
                 validation.validationOfVariableValues((TokenInfo)$1);
               }
@@ -133,10 +146,12 @@ command:        identifier ASSIGN expression SEMICOLON {
                 this.validation.validateToWriteToken((TokenInfo)$2);
               }
 ;
-expression:     value {/** value */}
+expression:   value {
+                System.out.println("value : "+(TokenInfo)$1);
+              }
               | value PLUS value {
                 this.validation.add((TokenInfo)$$,(TokenInfo)$3);
-                makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+$$+" $1 = "+ $1+" $2 =  "+$3);
+                //makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+$$+" $1 = "+ $1+" $2 =  "+$3);
               }
 
               | value MINUS value {/** value MINUS value */}
@@ -153,20 +168,32 @@ condition:      value EQ value {/** value EQ value */}
 ;
 value:          NUM {
                      ((TokenInfo)$1).setValue((BigInteger)((TokenInfo)$1).getSemanticValue());
-                     makeColor(ColorMessage.PINK,"NUM "+$$);
+                     //makeColor(ColorMessage.PINK,"NUM "+$$);
                }
-              | identifier {makeColor(ColorMessage.PINK,"value.identifier "+$$);}
+              | identifier {
+                //makeColor(ColorMessage.PINK,"value.identifier "+$$);
+              }
 ;
 identifier:     PIDENTIFIER {
+
+                 if (yystack.height >= 5){
+                   if (((TokenInfo)yystack.valueAt (0)).getBeforeTokenId() == Lexer.FROM){
+                        TokenInfo forIterator = (TokenInfo) yystack.valueAt(2);
+                        forIterator.setType(new SimpleType(new BigInteger("-1")));
+                        this.validation.pidIdOnInfo.put((String) forIterator.getSemanticValue(),forIterator);
+                   }
+                 }
                 this.validation.getValueFromToken((TokenInfo)$1);
-                makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER "+$$);
+                //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER "+$$);
                 }
 
               | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {
                 this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
-                makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
+                //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
               }
               | PIDENTIFIER L_BRACKET NUM R_BRACKET{
-                   this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
+
+
+                this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
               }
 %%
