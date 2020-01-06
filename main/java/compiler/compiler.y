@@ -85,8 +85,12 @@ import java.math.BigInteger;
 %left TIMES DIV MOD
 %%
 
-program:        DECLARE declarations BEGIN commands END {}
-              | BEGIN commands END {}
+program:        DECLARE declarations BEGIN commands END {
+                                 System.out.println((TokenInfo)$4);
+               }
+              | BEGIN commands END {
+                System.out.println((TokenInfo)$2);
+              }
 ;
 declarations:  declarations COMMA PIDENTIFIER {
                 /*System.out.println("\u001b[48;5;160m Ustawiam w ddeclarations COMMA PIDENTIFIER : "+$3+"na VAR\u001b[0m");*/
@@ -111,10 +115,10 @@ declarations:  declarations COMMA PIDENTIFIER {
               }
 ;
 commands:       commands command {
-                    System.out.println("Mamy komendy : "+(TokenInfo)$1+"\n oraz : "+(TokenInfo)$2);
+                    //System.out.println("Mamy komendy : "+(TokenInfo)$1+"\n oraz : "+(TokenInfo)$2);
                 }
               | command {
-                     System.out.println("Mamy komendę : "+(TokenInfo)$1);
+                     //System.out.println("Mamy komendę : "+(TokenInfo)$1);
                }
 ;
 command:        identifier ASSIGN expression SEMICOLON {
@@ -129,15 +133,15 @@ command:        identifier ASSIGN expression SEMICOLON {
               | DO commands WHILE condition ENDDO {}
               | FOR PIDENTIFIER FROM value TO value DO commands ENDFOR {
 
-                System.out.println("Iterujemy za pomocą  :"+$2);
-                System.out.println("FROM                 :"+$4);
-                System.out.println("TO                   : "+$6);
+                //System.out.println("Iterujemy za pomocą  :"+$2);
+                //System.out.println("FROM                 :"+$4);
+                //System.out.println("TO                   : "+$6);
               }
 
               | FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {
-                System.out.println("Iterujemy za pomocą  :"+$2);
-                System.out.println("FROM                 :"+$4);
-                System.out.println("TO                   : "+$6);
+                //System.out.println("Iterujemy za pomocą  :"+$2);
+                //System.out.println("FROM                 :"+$4);
+                //System.out.println("TO                   : "+$6);
                 }
               | READ identifier SEMICOLON {
                 validation.validationOfVariableValues((TokenInfo)$1);
@@ -147,10 +151,10 @@ command:        identifier ASSIGN expression SEMICOLON {
               }
 ;
 expression:   value {
-                System.out.println("value : "+(TokenInfo)$1);
+                //System.out.println("value : "+(TokenInfo)$1);
               }
               | value PLUS value {
-                this.validation.add((TokenInfo)$$,(TokenInfo)$3);
+                //this.validation.add((TokenInfo)$$,(TokenInfo)$3);
                 //makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+$$+" $1 = "+ $1+" $2 =  "+$3);
               }
 
@@ -183,17 +187,17 @@ identifier:     PIDENTIFIER {
                         this.validation.pidIdOnInfo.put((String) forIterator.getSemanticValue(),forIterator);
                    }
                  }
-                this.validation.getValueFromToken((TokenInfo)$1);
+                //this.validation.getValueFromToken((TokenInfo)$1);
                 //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER "+$$);
                 }
 
               | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {
-                this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
+                //this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
                 //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
               }
               | PIDENTIFIER L_BRACKET NUM R_BRACKET{
 
 
-                this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
+                //this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
               }
 %%
