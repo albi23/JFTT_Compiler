@@ -22,3 +22,10 @@ DEC       #p0=10
 STORE 5   #p5=10
 JUMP 15
 HALT
+
+
+#BEGIN
+#DECLARE
+#
+#
+#
