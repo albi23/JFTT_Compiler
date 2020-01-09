@@ -1,6 +1,11 @@
 package compiler.assembly;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -9,22 +14,41 @@ import java.util.Stack;
  */
 public class AssemblerCodeGenerator {
 
-    private  StringBuilder stringBuilder = new StringBuilder();
+    private List<String> code = new ArrayList<>();
     private int lastFreeCeil = 2;
 
-    public void beginProgram(){
-        stringBuilder.append("SUB 0").append('\n');
-        stringBuilder.append("DEC").append('\n');
-        stringBuilder.append("STORE 2").append('\n');
-        stringBuilder.append("INC").append('\n');
-        stringBuilder.append("INC").append('\n');
-        stringBuilder.append("STORE 1").append('\n');
+
+    private String appendLine(String toAppend){
+        return toAppend.concat("\n");
     }
-    public String getValue(BigInteger num, int storeCeil){
+    public void beginProgram(){ //testing
+        code.add(appendLine("SUB 0"));
+        code.add(appendLine("DEC"));
+        code.add(appendLine("STORE 2"));
+        code.add(appendLine("INC"));
+        code.add(appendLine("INC"));
+        code.add(appendLine("STORE 1"));
+        code.addAll(multiply(new BigInteger("1234567"), new BigInteger("1234567"),code.size()));
+        code.add(appendLine("HALT"));
+        this.saveToFile(code);
+    }
+
+    public void saveToFile(List<String> code){
+        try (FileWriter fileWriter = new FileWriter("/home/albert/IdeaProjects/JFTT_Complier/src/main/java/tests/outcode/multitest.sh")){
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            for (String s: code) {
+                printWriter.print(s);
+            }
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<String> getValue(BigInteger num, int storeCeil){
         boolean verbose = false;
         long numberDeclarations = num.longValueExact();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("LOAD 1").append('\n');
+        List<String> innerCode = new ArrayList<>();
+        innerCode.add(appendLine("LOAD 1"));
         Stack<String> commands = new Stack<>();
         if (verbose)System.out.println("Value "+ numberDeclarations);
         while (numberDeclarations > 1){
@@ -36,75 +60,60 @@ public class AssemblerCodeGenerator {
             if (verbose)System.out.println("Value "+ numberDeclarations);
         }
 
-        while (commands.size() > 0)   stringBuilder.append(commands.pop()).append('\n');
+        while (commands.size() > 0)   innerCode.add(appendLine(commands.pop()));
         if (storeCeil > 0 ){
-            stringBuilder.append("STORE ").append(storeCeil).append('\n');
+            innerCode.add(appendLine("STORE ".concat(String.valueOf(storeCeil))));
         }
-        return stringBuilder.toString();
+        return innerCode;
     }
 
     /** Komórki mi potrzebne które są w uzyciu
      */
-    public String multiply(BigInteger num, BigInteger num2, int  lines){
+    public List<String> multiply(BigInteger num, BigInteger num2, int  lineOffset){
 
-        StringBuilder stringBuilder = new StringBuilder();
+        List<String> innerCommands = new ArrayList<>();
         int num1MemoryPosition = ++this.lastFreeCeil;
         int num2MemoryPosition = ++this.lastFreeCeil;
         int resultInMemory = ++this.lastFreeCeil;
 
         if (num.compareTo(num2) >= 0){
-            stringBuilder.append(this.getValue(num, num1MemoryPosition));
-            stringBuilder.append(this.getValue(num2, num2MemoryPosition)); // smaller number is always in num2memor
+            List<String> value = this.getValue(num, num1MemoryPosition);
+            innerCommands.addAll(value);
+            List<String> value2 = this.getValue(num2, num2MemoryPosition);  // smaller number is always in num2memor
+            innerCommands.addAll(value2);
         }else {
-            stringBuilder.append(this.getValue(num2, num1MemoryPosition));
-            stringBuilder.append(this.getValue(num, num2MemoryPosition));
+            List<String> value = this.getValue(num2, num1MemoryPosition);
+            innerCommands.addAll(value);
+            List<String> value2 = this.getValue(num, num2MemoryPosition);  // smaller number is always in num2memor
+            innerCommands.addAll(value2);
         }
 
 
-        String a = "LOAD 3  # ŁADUJEMY A\n" +
-                "SHIFT 1 #PRZESUWAMY W PRAWO\n" +
-                "SHIFT 2 #PRZESUWAMY W LEWO\n" +
-                "SUB 3  # MAMY RÓŻNICE A I A'\n" +
-
-                "JZERO 22 # MAMY 0 NA OSTATNIM BICIE (IF) +(WHILE)\n" +
-                "LOAD 5 # WEŻ WYNIK\n" +
-                "ADD 4 # DODAJ B\n" +
-                "STORE 5 # ZAPISZ NOWY WYNIK (END IF)\n" +
-                "LOAD 4 # WEZ B  # SKOCZEK Z W PRZYPADKU PRZESUNIĘCIA\n" +// B > A
-                "SHIFT 2 # PRZESUN B W LEWO\n" +
-                "STORE 4 # ZAPISZ B\n" +
-
-                "LOAD 3 #WEZ A\n" +//
-                "SHIFT 1 #PRZESUWAMY W PRAWO\n" +
-                "STORE 3 # ZAPISZ NOWE A\n" +
-                "JZERO 30 # JESLI WARTOŚ A = 0 KONCZ\n" +
-                "JUMP 14 # {END WHILE}";
-
-        stringBuilder.append("LOAD 1").append(num1MemoryPosition).append('\n');
-        stringBuilder.append("DEC").append(num1MemoryPosition).append('\n');
-        stringBuilder.append("STORE ").append(resultInMemory).append('\n').append("# RESULT MEMORY");
-        stringBuilder.append("LOAD ").append(num2MemoryPosition).append('\n');
-        stringBuilder.append("SHIFT 2").append(num2MemoryPosition).append('\n');
-        stringBuilder.append("SHIFT 1").append(num2MemoryPosition).append('\n');
-        stringBuilder.append("SUB ").append(num2MemoryPosition).append('\n');
-        int jzeroJump =  stringBuilder.length(); // postion under
+        innerCommands.add(appendLine("LOAD 1")); // get num = 1
+        innerCommands.add(appendLine("DEC")); // set 0
+        innerCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory).concat(" #save result"))));
+        innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
+        int jumpPosition = innerCommands.size()-1+lineOffset;
+        innerCommands.add(appendLine("SHIFT 2"));
+        innerCommands.add(appendLine("SHIFT 1"));
+        innerCommands.add(appendLine("SUB ".concat(String.valueOf(num2MemoryPosition))));
+        int jzeroJumpPosition =  innerCommands.size()+lineOffset-1+5; // get current post and jump 4 post in
+        innerCommands.add(appendLine("JZERO ".concat(String.valueOf(jzeroJumpPosition))));
         // Ther should be JZERO XX but we have to know which line so remember this postion
-        stringBuilder.append("JZERO XX").append(num2MemoryPosition).append('\n');
-        stringBuilder.append("LOAD ").append(resultInMemory).append('\n');
-        stringBuilder.append("ADD ").append(num1MemoryPosition).append('\n');
-        stringBuilder.append("STORE ").append(resultInMemory).append('\n');
-        stringBuilder.append("LOAD ").append(num1MemoryPosition).append('\n');
-        stringBuilder.append("SHIFT 1").append('\n');
-        stringBuilder.append("STORE ").append(num1MemoryPosition).append('\n');
-        stringBuilder.append("LOAD ").append(num2MemoryPosition).append('\n');
-        stringBuilder.append("SHIFT 2").append('\n');
-        stringBuilder.append("STORE ").append(num2MemoryPosition).append('\n');
-        stringBuilder.append("JZERO ").append("?").append('\n');
-        stringBuilder.append("JUMP ").append("?").append('\n');
-//        stringBuilder.
-//        stringBuilder.append("STORE ").append(num2MemoryPosition).append('\n');
-return null;
-
-
+        innerCommands.add(appendLine("LOAD ".concat(String.valueOf(resultInMemory))));
+        innerCommands.add(appendLine("ADD ".concat(String.valueOf(num1MemoryPosition))));
+        innerCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory))));
+        innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num1MemoryPosition))));
+        innerCommands.add(appendLine("SHIFT 1"));
+        innerCommands.add(appendLine("STORE ".concat(String.valueOf(num1MemoryPosition)))); // # ZAPISZ B
+        innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
+        innerCommands.add(appendLine("SHIFT 2"));
+        innerCommands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));//# ZAPISZ NOWE A
+        innerCommands.add(appendLine("JZERO ".concat(String.valueOf((innerCommands.size()-1)+3+lineOffset))));
+        innerCommands.add(appendLine("JUMP ".concat(String.valueOf(jumpPosition))));///
+        innerCommands.add(appendLine("LOAD ".concat(String.valueOf(resultInMemory))));
+        innerCommands.add(appendLine("PUT "));
+        return innerCommands;
     }
+
 }
