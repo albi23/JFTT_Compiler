@@ -34,7 +34,7 @@ public class AssemblerCodeGenerator {
         code.add(appendLine("INC"));
         code.add(appendLine("INC"));
         code.add(appendLine("STORE 1"));
-        code.addAll(mod(new BigInteger("-25"), new BigInteger("0"), code.size()));
+        code.addAll(mod(new BigInteger("-10"), new BigInteger("-8"), code.size()));
         code.add(appendLine("HALT"));
         this.saveToFile(code);
     }
@@ -260,6 +260,8 @@ public class AssemblerCodeGenerator {
         this.changeIfNegativeNumber(modCommands,num,num1MemoryPosition);
         this.changeIfNegativeNumber(modCommands,num2,num2MemoryPosition);
         this.changeIfNegativeNumber(modCommands,num2,resultInMemory); // result must have the same sign what divider
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(resultInMemory)).concat(" # spr result")));
+
         modCommands.add(appendLine("PUT"));
 
         return modCommands;
