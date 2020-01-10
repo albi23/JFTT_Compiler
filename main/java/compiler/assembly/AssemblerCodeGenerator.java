@@ -19,8 +19,8 @@ public class AssemblerCodeGenerator {
     private int lastFreeCeil = 2;
 
     public AssemblerCodeGenerator(String outFileName) {
-        this.outFileName = outFileName;
-//        this.outFileName = "";
+//        this.outFileName = outFileName;
+        this.outFileName = "myModTest.sh";
     }
 
     private String appendLine(String toAppend) {
@@ -34,7 +34,7 @@ public class AssemblerCodeGenerator {
         code.add(appendLine("INC"));
         code.add(appendLine("INC"));
         code.add(appendLine("STORE 1"));
-        code.addAll(divide(new BigInteger("-80000"), new BigInteger("40"), code.size()));
+        code.addAll(mod(new BigInteger("-25"), new BigInteger("0"), code.size()));
         code.add(appendLine("HALT"));
         this.saveToFile(code);
     }
@@ -107,18 +107,16 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("DEC"));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition)).concat("  #store result")));
         commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition)).concat("  #store temp k"))); // result memory postion
-        if (num1.signum() < 0) {
-            this.changeNumberSign(commands, num1MemoryPosition);
-        }
-        if (num2.signum() < 0) {
-            this.changeNumberSign(commands, num2MemoryPosition);
-        }
-        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat("  # load "+num2)));
+
+        this.changeIfNegativeNumber(commands, num1, num1MemoryPosition);
+        this.changeIfNegativeNumber(commands, num2, num2MemoryPosition);
+
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat("  # load " + num2)));
         commands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition))));
-        int jposJump = commands.size()-1+lineOffSet+11;
+        int jposJump = commands.size() - 1 + lineOffSet + 11;
         commands.add(appendLine("JPOS ".concat(String.valueOf(jposJump))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
-        int beginWhileJump = commands.size()-1+lineOffSet-3;
+        int beginWhileJump = commands.size() - 1 + lineOffSet - 3;
         commands.add(appendLine("JNEG ".concat(String.valueOf(jposJump))));
         commands.add(appendLine("JZERO ".concat(String.valueOf(jposJump))));
         commands.add(appendLine("SHIFT 1"));
@@ -128,17 +126,17 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition))));
         commands.add(appendLine("JUMP ".concat(String.valueOf(beginWhileJump))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(tempKMemoryPosition)).concat(" # load k")));
-        int endWhileJump = commands.size()-1+lineOffSet+1+22;
+        int endWhileJump = commands.size() - 1 + lineOffSet + 1 + 22;
         commands.add(appendLine("JNEG ".concat(String.valueOf(endWhileJump))));
         commands.add(appendLine("JZERO ".concat(String.valueOf(endWhileJump))));
         commands.add(appendLine("DEC "));
         commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition))));
-        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat(" # load "+num2)));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat(" # load " + num2)));
         commands.add(appendLine("SHIFT 2"));
         commands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
         commands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition)).concat(" # if B <= A")));
-        int elseJump = commands.size() -1+lineOffSet+10;
+        int elseJump = commands.size() - 1 + lineOffSet + 10;
         commands.add(appendLine("JPOS ".concat(String.valueOf(elseJump)).concat("  # stąd ")));
         commands.add(appendLine("LOAD ".concat(String.valueOf(num1MemoryPosition))));
         commands.add(appendLine("SUB ".concat(String.valueOf(num2MemoryPosition))));
@@ -152,12 +150,9 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("SHIFT 1"));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition))));
         commands.add(appendLine("JUMP ".concat(String.valueOf(jposJump))));
-        if (num1.signum() < 0) {
-            this.changeNumberSign(commands, num1MemoryPosition);
-        }
-        if (num2.signum() < 0) {
-            this.changeNumberSign(commands, num2MemoryPosition);
-        }
+
+        this.changeIfNegativeNumber(commands, num1, num1MemoryPosition);
+        this.changeIfNegativeNumber(commands, num2, num2MemoryPosition);
         if (!(num1.signum() == num2.signum() || num2.abs().compareTo(num1.abs()) > 0)) { // tutaj można wywali dla 2 wersji (|| num2.abs().compareTo(num1.abs()) > 0)
             this.changeNumberSign(commands, resultMemoryPosition);
         }
@@ -188,12 +183,9 @@ public class AssemblerCodeGenerator {
         innerCommands.add(appendLine("LOAD 1")); // get num = 1
         innerCommands.add(appendLine("DEC")); // set 0
         innerCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory).concat(" #save result"))));
-        if (num2.signum() < 0) {
-            this.changeNumberSign(innerCommands,num2MemoryPosition);
-        }
-        if (num.signum() < 0) {
-            this.changeNumberSign(innerCommands,num1MemoryPosition);
-        }
+        this.changeIfNegativeNumber(innerCommands,num2,num2MemoryPosition);
+        this.changeIfNegativeNumber(innerCommands,num,num1MemoryPosition);
+
         innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
         int jumpPosition = innerCommands.size() - 1 + lineOffset;
         innerCommands.add(appendLine("SHIFT 2"));
@@ -219,6 +211,64 @@ public class AssemblerCodeGenerator {
         innerCommands.add(appendLine("LOAD ".concat(String.valueOf(resultInMemory))));
         innerCommands.add(appendLine("PUT "));
         return innerCommands;
+    }
+
+    public List<String> mod(BigInteger num, BigInteger num2, int lineOffset){ // a mod b
+
+        List<String> modCommands = new ArrayList<>();
+
+        int resultInMemory = ++this.lastFreeCeil;
+        int num1MemoryPosition = ++this.lastFreeCeil;
+        int num2MemoryPosition = ++this.lastFreeCeil;
+        int num2CopyMemoryPosition = ++this.lastFreeCeil;
+
+        modCommands.addAll(this.getValue(num, num1MemoryPosition));
+        modCommands.addAll(this.getValue(num2, num2MemoryPosition)); // smaller number is always in num2memor
+
+        modCommands.add(appendLine("LOAD 1")); // get num = 1
+        modCommands.add(appendLine("DEC")); // set 0
+        modCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory).concat(" #save result"))));
+
+        this.changeIfNegativeNumber(modCommands,num,num1MemoryPosition);
+        this.changeIfNegativeNumber(modCommands,num2,num2MemoryPosition);
+
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition).concat(" # B"))));
+        modCommands.add(appendLine("STORE ".concat(String.valueOf(num2CopyMemoryPosition).concat(" # B'"))));
+        int modBy0Jump = modCommands.size()-1+lineOffset+1+17;
+        modCommands.add(appendLine("JZERO  ".concat(String.valueOf(modBy0Jump))));
+        int beginWhile = modCommands.size()-1+lineOffset+1;
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
+        modCommands.add(appendLine("ADD ".concat(String.valueOf(num2CopyMemoryPosition))));
+        modCommands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition))));
+        int endWhileJump = modCommands.size()-1+lineOffset+1+5;
+        modCommands.add(appendLine("JPOS  ".concat(String.valueOf(endWhileJump))));
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
+        modCommands.add(appendLine("ADD ".concat(String.valueOf(num2CopyMemoryPosition))));
+        modCommands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
+        modCommands.add(appendLine("JUMP  ".concat(String.valueOf(beginWhile).concat(" # to begin while"))));
+        modCommands.add(appendLine("LOAD  ".concat(String.valueOf(num2CopyMemoryPosition).concat(" # is clone of -> b' > a"))));
+        modCommands.add(appendLine("SUB  ".concat(String.valueOf(num1MemoryPosition))));
+        int endIfJump = modCommands.size()-1+lineOffset+1+4;
+        modCommands.add(appendLine("JNEG  ".concat(String.valueOf(endIfJump))));
+        modCommands.add(appendLine("LOAD 1"));
+        modCommands.add(appendLine("DEC"));
+        modCommands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(num1MemoryPosition))));
+        modCommands.add(appendLine("SUB ".concat(String.valueOf(num2MemoryPosition))));
+        modCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory))));
+
+        this.changeIfNegativeNumber(modCommands,num,num1MemoryPosition);
+        this.changeIfNegativeNumber(modCommands,num2,num2MemoryPosition);
+        this.changeIfNegativeNumber(modCommands,num2,resultInMemory); // result must have the same sign what divider
+        modCommands.add(appendLine("PUT"));
+
+        return modCommands;
+    }
+
+    private void changeIfNegativeNumber(List<String> commands,BigInteger numToCheck, int ceilPost){
+        if (numToCheck.signum() < 0) {
+            this.changeNumberSign(commands, ceilPost);
+        }
     }
 
     private void changeNumberSign(List<String> commands, int ceilPost){
