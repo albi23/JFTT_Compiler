@@ -34,7 +34,7 @@ public class AssemblerCodeGenerator {
         code.add(appendLine("INC"));
         code.add(appendLine("INC"));
         code.add(appendLine("STORE 1"));
-        code.addAll(divide(new BigInteger("100"), new BigInteger("-2"), code.size()));
+        code.addAll(divide(new BigInteger("-80000"), new BigInteger("40"), code.size()));
         code.add(appendLine("HALT"));
         this.saveToFile(code);
     }
@@ -107,6 +107,12 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("DEC"));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition)).concat("  #store result")));
         commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition)).concat("  #store temp k"))); // result memory postion
+        if (num1.signum() < 0) {
+            this.changeNumberSign(commands, num1MemoryPosition);
+        }
+        if (num2.signum() < 0) {
+            this.changeNumberSign(commands, num2MemoryPosition);
+        }
         commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat("  # load "+num2)));
         commands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition))));
         int jposJump = commands.size()-1+lineOffSet+11;
@@ -146,9 +152,19 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("SHIFT 1"));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition))));
         commands.add(appendLine("JUMP ".concat(String.valueOf(jposJump))));
+        if (num1.signum() < 0) {
+            this.changeNumberSign(commands, num1MemoryPosition);
+        }
+        if (num2.signum() < 0) {
+            this.changeNumberSign(commands, num2MemoryPosition);
+        }
+        if (!(num1.signum() == num2.signum() || num2.abs().compareTo(num1.abs()) > 0)) { // tutaj można wywali dla 2 wersji (|| num2.abs().compareTo(num1.abs()) > 0)
+            this.changeNumberSign(commands, resultMemoryPosition);
+        }
         commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition)).concat(" # spr result")));
         commands.add(appendLine("PUT "));
 
+        --this.lastFreeCeil; // free k temp ceil
         return commands;
     }
     /**
@@ -206,9 +222,9 @@ public class AssemblerCodeGenerator {
     }
 
     private void changeNumberSign(List<String> commands, int ceilPost){
-        commands.add(appendLine("LOAD 1")); // get num = 1
+        commands.add(appendLine("LOAD 1".concat(" # start reversion"))); // get num = 1
         commands.add(appendLine("DEC")); // SET 0
         commands.add(appendLine("SUB ".concat(String.valueOf(ceilPost))));
-        commands.add(appendLine("STORE ".concat(String.valueOf(ceilPost))));
+        commands.add(appendLine("STORE ".concat(String.valueOf(ceilPost)).concat(" # end reversion")));
     }
 }
