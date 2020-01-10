@@ -1,5 +1,5 @@
 SUB 0
-STORE 5 # WYNIK = EMPTY = 0 = DUPA
+STORE 5 # WYNIK = EMPTY = 0 = DUPA = chuj = kurwa= ja pierdole 5 zamiast 6 do chuja
 STORE 6 # k = 0
 DEC
 STORE 2
@@ -22,20 +22,19 @@ SHIFT 1 # 256 DZIENLA
 STORE 4 # A ====================
 LOAD 3  # WEZ B
 SUB 4   # ODEJMIJ A
-JPOS  34 # B < A ? # było 32
+JPOS  34 # B < A ?
 LOAD 3 #
 JNEG 34 # B < 0 ?  # było 34
 JZERO 34 # B = 0 ?  # było 34
 SHIFT 1
 STORE 3
-LOAD 6 # K
+LOAD 6 # K //////
 INC   # K ++
 STORE 6 # ZAPISZ K
 JUMP 22
 LOAD 6 # WEŹ K , DOPÓKI K > 0 TO
-PUT # wyisz k
-JNEG  58  # DOPÓKI K > 0 TO // 57
-JZERO 58  # DOPÓKI K > 0 TO // 57
+JNEG  57  # DOPÓKI K > 0 TO
+JZERO 57  # DOPÓKI K > 0 TO
 DEC # k--
 STORE 6 # save k
 LOAD 3 # ŁADUJEMY B
@@ -43,19 +42,19 @@ SHIFT 2 # PRZESÓWAMY W PRAWO
 STORE 3 # ZAPISUJEMY
 LOAD 3  # ŁADUJEMY B !! TUTAJ OPTYMALIZACJA
 SUB 4 # IF B <= A
-JPOS 54 # // 53 CZYLI JAK RÓŻNICA JEST UJEMNA RO B < A
+JPOS 53 # // CZYLI JAK RÓŻNICA JEST UJEMNA RO B < A
 LOAD 4 # A
 SUB 3 # A- B
 STORE 4 # A -= B
-LOAD 5
+LOAD 5 #// res
 SHIFT 1
 INC
-STORE 5
+STORE 5 # zapisz nowy wynik
 JUMP 34
 LOAD 5 # RESULT
 SHIFT 1 # RESULT <<
 STORE 5 # SAVE
 JUMP 34
-LOAD 5 #
+LOAD 5 # sprawdzanie wyniku
 PUT
 HALT

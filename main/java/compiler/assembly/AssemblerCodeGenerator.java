@@ -14,9 +14,14 @@ import java.util.Stack;
  */
 public class AssemblerCodeGenerator {
 
+    private String outFileName;
     private List<String> code = new ArrayList<>();
     private int lastFreeCeil = 2;
 
+    public AssemblerCodeGenerator(String outFileName) {
+        this.outFileName = outFileName;
+//        this.outFileName = "";
+    }
 
     private String appendLine(String toAppend) {
         return toAppend.concat("\n");
@@ -29,13 +34,13 @@ public class AssemblerCodeGenerator {
         code.add(appendLine("INC"));
         code.add(appendLine("INC"));
         code.add(appendLine("STORE 1"));
-        code.addAll(multiply(new BigInteger("-555"), new BigInteger("100"), code.size()));
+        code.addAll(divide(new BigInteger("100"), new BigInteger("-2"), code.size()));
         code.add(appendLine("HALT"));
         this.saveToFile(code);
     }
 
     public void saveToFile(List<String> code) {
-        try (FileWriter fileWriter = new FileWriter("/home/albert/IdeaProjects/JFTT_Complier/src/main/java/tests/outcode/multitest.sh")) {
+        try (FileWriter fileWriter = new FileWriter("/home/albert/IdeaProjects/JFTT_Complier/src/main/java/tests/outcode/"+this.outFileName)) {
             PrintWriter printWriter = new PrintWriter(fileWriter);
             for (String s : code) {
                 printWriter.print(s);
@@ -87,6 +92,65 @@ public class AssemblerCodeGenerator {
         return innerCode;
     }
 
+    public List<String> divide(BigInteger num1, BigInteger num2, int lineOffSet){
+        List<String> commands = new ArrayList<>();
+
+        int num1MemoryPosition = ++this.lastFreeCeil;
+        int num2MemoryPosition = ++this.lastFreeCeil;
+        int resultMemoryPosition = ++this.lastFreeCeil;
+        int tempKMemoryPosition = ++this.lastFreeCeil;
+
+        commands.addAll(this.getValue(num1, num1MemoryPosition));// A
+        commands.addAll(this.getValue(num2, num2MemoryPosition));// B
+        // prepare result ceil
+        commands.add(appendLine("LOAD 1"));
+        commands.add(appendLine("DEC"));
+        commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition)).concat("  #store result")));
+        commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition)).concat("  #store temp k"))); // result memory postion
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat("  # load "+num2)));
+        commands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition))));
+        int jposJump = commands.size()-1+lineOffSet+11;
+        commands.add(appendLine("JPOS ".concat(String.valueOf(jposJump))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
+        int beginWhileJump = commands.size()-1+lineOffSet-3;
+        commands.add(appendLine("JNEG ".concat(String.valueOf(jposJump))));
+        commands.add(appendLine("JZERO ".concat(String.valueOf(jposJump))));
+        commands.add(appendLine("SHIFT 1"));
+        commands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(tempKMemoryPosition))));
+        commands.add(appendLine("INC"));
+        commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition))));
+        commands.add(appendLine("JUMP ".concat(String.valueOf(beginWhileJump))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(tempKMemoryPosition)).concat(" # load k")));
+        int endWhileJump = commands.size()-1+lineOffSet+1+22;
+        commands.add(appendLine("JNEG ".concat(String.valueOf(endWhileJump))));
+        commands.add(appendLine("JZERO ".concat(String.valueOf(endWhileJump))));
+        commands.add(appendLine("DEC "));
+        commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat(" # load "+num2)));
+        commands.add(appendLine("SHIFT 2"));
+        commands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
+        commands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition)).concat(" # if B <= A")));
+        int elseJump = commands.size() -1+lineOffSet+10;
+        commands.add(appendLine("JPOS ".concat(String.valueOf(elseJump)).concat("  # stąd ")));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(num1MemoryPosition))));
+        commands.add(appendLine("SUB ".concat(String.valueOf(num2MemoryPosition))));
+        commands.add(appendLine("STORE ".concat(String.valueOf(num1MemoryPosition))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition))));
+        commands.add(appendLine("SHIFT 1"));
+        commands.add(appendLine("INC"));
+        commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition))));
+        commands.add(appendLine("JUMP ".concat(String.valueOf(jposJump))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition)).concat("  # result << tutaj")));
+        commands.add(appendLine("SHIFT 1"));
+        commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition))));
+        commands.add(appendLine("JUMP ".concat(String.valueOf(jposJump))));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition)).concat(" # spr result")));
+        commands.add(appendLine("PUT "));
+
+        return commands;
+    }
     /**
      * Komórki mi potrzebne które są w uzyciu
      */
@@ -102,10 +166,8 @@ public class AssemblerCodeGenerator {
             num = num2;
             num2 = tmp;
         }
-        List<String> value = this.getValue(num, num1MemoryPosition);
-        innerCommands.addAll(value);
-        List<String> value2 = this.getValue(num2, num2MemoryPosition);  // smaller number is always in num2memor
-        innerCommands.addAll(value2);
+        innerCommands.addAll(this.getValue(num, num1MemoryPosition));
+        innerCommands.addAll(this.getValue(num2, num2MemoryPosition)); // smaller number is always in num2memor
 
         innerCommands.add(appendLine("LOAD 1")); // get num = 1
         innerCommands.add(appendLine("DEC")); // set 0
