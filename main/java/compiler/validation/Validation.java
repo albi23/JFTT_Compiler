@@ -2,6 +2,7 @@ package compiler.validation;
 
 import compiler.CompilerBison;
 import compiler.CompilerFlex;
+import compiler.assembly.AssemblerCodeGenerator;
 import compiler.holder.TokenInfo;
 import compiler.holder.TypeHolder;
 import compiler.holder.types.ArrayType;
@@ -16,8 +17,9 @@ public class Validation {
 
     public Map<String, TokenInfo> pidIdOnInfo = new HashMap<>(100);
     private CompilerFlex scanner;
+    private AssemblerCodeGenerator asm;
 
-    public Validation(CompilerFlex scanner) {
+    public Validation(CompilerFlex scanner, AssemblerCodeGenerator asm) {
         this.scanner = scanner;
     }
 
@@ -30,6 +32,11 @@ public class Validation {
         System.exit(1);
     }
 
+    public void printDeclarations(){
+        pidIdOnInfo.forEach((k,v)->{
+            System.out.println("key : "+k+"  value : "+v);
+        });
+    }
 
     /**
      * Validation function using identifiers
@@ -40,6 +47,7 @@ public class Validation {
             showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
         } else {
             tokenInfo.setVariableType(type);
+            tokenInfo.setMemoryAddr(asm.getLastFreeCeil());
             pidIdOnInfo.put(tokenInfo.getSemanticValue().toString(),tokenInfo);
         }
     }

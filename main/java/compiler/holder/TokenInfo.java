@@ -12,6 +12,7 @@ public class TokenInfo<V> {
     private BigInteger value;
     private int linePos;
     private int beforeTokenId;
+    private long memoryAddr;
 
     public TokenInfo(V semanticValue, int linePos) {
         this.semanticValue = semanticValue;
@@ -59,15 +60,22 @@ public class TokenInfo<V> {
         this.variableType = variableType;
     }
 
+    public long getMemoryAddr() {
+        return memoryAddr;
+    }
+
+    public void setMemoryAddr(long memoryAddr) {
+        this.memoryAddr = memoryAddr;
+    }
+
     @Override
     public String toString() {
         return "TokenInfo{" +
-                "semanticValue=" + semanticValue +
-                ", type=" + type +
-                ", variableType=" + variableType +
-                ", value=" + value +
+                "sValue=" + semanticValue +
+//                ", variableType=" + variableType +
+//                ", value=" + value +
                 ", linePos=" + linePos +
-                ", tokenId=" + beforeTokenId +
+//                ", tokenId=" + beforeTokenId +
                 '}';
     }
 }

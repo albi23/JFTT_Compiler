@@ -16,11 +16,18 @@ public class AssemblerCodeGenerator {
 
     private String outFileName;
     private List<String> code = new ArrayList<>();
-    private int lastFreeCeil = 2;
+    private static int lastFreeCeil = 11;
+    private static final int ONE_VALUE = ++lastFreeCeil;
+    private static final int MINUS_ONE_VALUE = ++lastFreeCeil;
 
     public AssemblerCodeGenerator(String outFileName) {
-//        this.outFileName = outFileName;
-        this.outFileName = "myModTest.sh";
+        this.outFileName = outFileName;
+        this.beginProgram();
+//        this.outFileName = "myModTest.sh";
+    }
+
+    public  int getLastFreeCeil(){
+        return lastFreeCeil;
     }
 
     private String appendLine(String toAppend) {
@@ -30,10 +37,10 @@ public class AssemblerCodeGenerator {
     public void beginProgram() { //testing
         code.add(appendLine("SUB 0"));
         code.add(appendLine("DEC"));
-        code.add(appendLine("STORE 2"));
+        code.add(appendLine("STORE ".concat(String.valueOf(MINUS_ONE_VALUE))));
         code.add(appendLine("INC"));
         code.add(appendLine("INC"));
-        code.add(appendLine("STORE 1"));
+        code.add(appendLine("STORE ".concat(String.valueOf(ONE_VALUE))));
         code.addAll(mod(new BigInteger("-10"), new BigInteger("-8"), code.size()));
         code.add(appendLine("HALT"));
         this.saveToFile(code);
@@ -58,7 +65,7 @@ public class AssemblerCodeGenerator {
         Stack<String> commands = new Stack<>();
 
         if (num.signum() == 0){
-            innerCode.add(appendLine("LOAD 1"));
+            innerCode.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE))));
             innerCode.add(appendLine("DEC"));
             if (storeCeil > 0){
                 innerCode.add(appendLine("STORE ".concat(String.valueOf(storeCeil)).concat("  # there is value : "+num)));
@@ -69,12 +76,12 @@ public class AssemblerCodeGenerator {
             numberDeclarations = - numberDeclarations;
             signChange = true;
         }
-        innerCode.add(appendLine("LOAD 1"));
+        innerCode.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE))));
         while (numberDeclarations > 1) {
             if (numberDeclarations % 2 == 1) {
                 commands.push("INC");
             }
-            commands.push("SHIFT 1");
+            commands.push("SHIFT ".concat(String.valueOf(ONE_VALUE)));
             numberDeclarations = numberDeclarations / 2;
         }
 
@@ -82,7 +89,7 @@ public class AssemblerCodeGenerator {
         if (signChange){
             int ceil = (storeCeil > 0) ? storeCeil : lastFreeCeil+1;
             innerCode.add(appendLine("STORE ".concat(String.valueOf(ceil))));
-            innerCode.add(appendLine("LOAD 1"));
+            innerCode.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE))));
             innerCode.add(appendLine("DEC"));
             innerCode.add(appendLine("SUB ".concat(String.valueOf(ceil)).concat("  # there is reversion of number")));
         }
@@ -95,15 +102,15 @@ public class AssemblerCodeGenerator {
     public List<String> divide(BigInteger num1, BigInteger num2, int lineOffSet){
         List<String> commands = new ArrayList<>();
 
-        int num1MemoryPosition = ++this.lastFreeCeil;
-        int num2MemoryPosition = ++this.lastFreeCeil;
-        int resultMemoryPosition = ++this.lastFreeCeil;
-        int tempKMemoryPosition = ++this.lastFreeCeil;
+        int num1MemoryPosition = ++lastFreeCeil;
+        int num2MemoryPosition = ++lastFreeCeil;
+        int resultMemoryPosition = ++lastFreeCeil;
+        int tempKMemoryPosition = ++lastFreeCeil;
 
         commands.addAll(this.getValue(num1, num1MemoryPosition));// A
         commands.addAll(this.getValue(num2, num2MemoryPosition));// B
         // prepare result ceil
-        commands.add(appendLine("LOAD 1"));
+        commands.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE))));
         commands.add(appendLine("DEC"));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition)).concat("  #store result")));
         commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition)).concat("  #store temp k"))); // result memory postion
@@ -119,7 +126,7 @@ public class AssemblerCodeGenerator {
         int beginWhileJump = commands.size() - 1 + lineOffSet - 3;
         commands.add(appendLine("JNEG ".concat(String.valueOf(jposJump))));
         commands.add(appendLine("JZERO ".concat(String.valueOf(jposJump))));
-        commands.add(appendLine("SHIFT 1"));
+        commands.add(appendLine("SHIFT ".concat(String.valueOf(ONE_VALUE))));
         commands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(tempKMemoryPosition))));
         commands.add(appendLine("INC"));
@@ -132,7 +139,7 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("DEC "));
         commands.add(appendLine("STORE ".concat(String.valueOf(tempKMemoryPosition))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition)).concat(" # load " + num2)));
-        commands.add(appendLine("SHIFT 2"));
+        commands.add(appendLine("SHIFT ".concat(String.valueOf(MINUS_ONE_VALUE))));
         commands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
         commands.add(appendLine("SUB ".concat(String.valueOf(num1MemoryPosition)).concat(" # if B <= A")));
@@ -142,12 +149,12 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("SUB ".concat(String.valueOf(num2MemoryPosition))));
         commands.add(appendLine("STORE ".concat(String.valueOf(num1MemoryPosition))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition))));
-        commands.add(appendLine("SHIFT 1"));
+        commands.add(appendLine("SHIFT ".concat(String.valueOf(ONE_VALUE))));
         commands.add(appendLine("INC"));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition))));
         commands.add(appendLine("JUMP ".concat(String.valueOf(jposJump))));
         commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition)).concat("  # result << tutaj")));
-        commands.add(appendLine("SHIFT 1"));
+        commands.add(appendLine("SHIFT ".concat(String.valueOf(ONE_VALUE))));
         commands.add(appendLine("STORE ".concat(String.valueOf(resultMemoryPosition))));
         commands.add(appendLine("JUMP ".concat(String.valueOf(jposJump))));
 
@@ -159,7 +166,7 @@ public class AssemblerCodeGenerator {
         commands.add(appendLine("LOAD ".concat(String.valueOf(resultMemoryPosition)).concat(" # spr result")));
         commands.add(appendLine("PUT "));
 
-        --this.lastFreeCeil; // free k temp ceil
+        --lastFreeCeil; // free k temp ceil
         return commands;
     }
     /**
@@ -168,9 +175,9 @@ public class AssemblerCodeGenerator {
     public List<String> multiply(BigInteger num, BigInteger num2, int lineOffset) {
 
         List<String> innerCommands = new ArrayList<>();
-        int num1MemoryPosition = ++this.lastFreeCeil;
-        int num2MemoryPosition = ++this.lastFreeCeil;
-        int resultInMemory = ++this.lastFreeCeil;
+        int num1MemoryPosition = ++lastFreeCeil;
+        int num2MemoryPosition = ++lastFreeCeil;
+        int resultInMemory = ++lastFreeCeil;
 
         if (num.compareTo(num2) < 0) {// num powinien być zawsze większy niż num2
             BigInteger tmp = num; // shift
@@ -180,7 +187,7 @@ public class AssemblerCodeGenerator {
         innerCommands.addAll(this.getValue(num, num1MemoryPosition));
         innerCommands.addAll(this.getValue(num2, num2MemoryPosition)); // smaller number is always in num2memor
 
-        innerCommands.add(appendLine("LOAD 1")); // get num = 1
+        innerCommands.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE)))); // get num = 1
         innerCommands.add(appendLine("DEC")); // set 0
         innerCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory).concat(" #save result"))));
         this.changeIfNegativeNumber(innerCommands,num2,num2MemoryPosition);
@@ -188,8 +195,8 @@ public class AssemblerCodeGenerator {
 
         innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
         int jumpPosition = innerCommands.size() - 1 + lineOffset;
-        innerCommands.add(appendLine("SHIFT 2"));
-        innerCommands.add(appendLine("SHIFT 1"));
+        innerCommands.add(appendLine("SHIFT ".concat(String.valueOf(MINUS_ONE_VALUE))));
+        innerCommands.add(appendLine("SHIFT ".concat(String.valueOf(ONE_VALUE))));
         innerCommands.add(appendLine("SUB ".concat(String.valueOf(num2MemoryPosition))));
         int jzeroJumpPosition = innerCommands.size() + lineOffset - 1 + 5; // get current post and jump 4 post in
         innerCommands.add(appendLine("JZERO ".concat(String.valueOf(jzeroJumpPosition))));
@@ -198,10 +205,10 @@ public class AssemblerCodeGenerator {
         innerCommands.add(appendLine("ADD ".concat(String.valueOf(num1MemoryPosition))));
         innerCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory))));
         innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num1MemoryPosition))));
-        innerCommands.add(appendLine("SHIFT 1"));
+        innerCommands.add(appendLine("SHIFT ".concat(String.valueOf(ONE_VALUE))));
         innerCommands.add(appendLine("STORE ".concat(String.valueOf(num1MemoryPosition)))); // # ZAPISZ B
         innerCommands.add(appendLine("LOAD ".concat(String.valueOf(num2MemoryPosition))));
-        innerCommands.add(appendLine("SHIFT 2"));
+        innerCommands.add(appendLine("SHIFT ".concat(String.valueOf(MINUS_ONE_VALUE))));
         innerCommands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));//# ZAPISZ NOWE A
         innerCommands.add(appendLine("JZERO ".concat(String.valueOf((innerCommands.size() - 1) + 3 + lineOffset))));
         innerCommands.add(appendLine("JUMP ".concat(String.valueOf(jumpPosition))));///
@@ -217,15 +224,15 @@ public class AssemblerCodeGenerator {
 
         List<String> modCommands = new ArrayList<>();
 
-        int resultInMemory = ++this.lastFreeCeil;
-        int num1MemoryPosition = ++this.lastFreeCeil;
-        int num2MemoryPosition = ++this.lastFreeCeil;
-        int num2CopyMemoryPosition = ++this.lastFreeCeil;
+        int resultInMemory = ++lastFreeCeil;
+        int num1MemoryPosition = ++lastFreeCeil;
+        int num2MemoryPosition = ++lastFreeCeil;
+        int num2CopyMemoryPosition = ++lastFreeCeil;
 
         modCommands.addAll(this.getValue(num, num1MemoryPosition));
         modCommands.addAll(this.getValue(num2, num2MemoryPosition)); // smaller number is always in num2memor
 
-        modCommands.add(appendLine("LOAD 1")); // get num = 1
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE)))); // get num = 1
         modCommands.add(appendLine("DEC")); // set 0
         modCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory).concat(" #save result"))));
 
@@ -250,7 +257,7 @@ public class AssemblerCodeGenerator {
         modCommands.add(appendLine("SUB  ".concat(String.valueOf(num1MemoryPosition))));
         int endIfJump = modCommands.size()-1+lineOffset+1+4;
         modCommands.add(appendLine("JNEG  ".concat(String.valueOf(endIfJump))));
-        modCommands.add(appendLine("LOAD 1"));
+        modCommands.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE))));
         modCommands.add(appendLine("DEC"));
         modCommands.add(appendLine("STORE ".concat(String.valueOf(num2MemoryPosition))));
         modCommands.add(appendLine("LOAD ".concat(String.valueOf(num1MemoryPosition))));
@@ -274,7 +281,7 @@ public class AssemblerCodeGenerator {
     }
 
     private void changeNumberSign(List<String> commands, int ceilPost){
-        commands.add(appendLine("LOAD 1".concat(" # start reversion"))); // get num = 1
+        commands.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE)).concat(" # start reversion"))); // get num = 1
         commands.add(appendLine("DEC")); // SET 0
         commands.add(appendLine("SUB ".concat(String.valueOf(ceilPost))));
         commands.add(appendLine("STORE ".concat(String.valueOf(ceilPost)).concat(" # end reversion")));
