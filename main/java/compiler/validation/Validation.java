@@ -47,7 +47,7 @@ public class Validation {
             showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
         } else {
             tokenInfo.setVariableType(type);
-            tokenInfo.setMemoryAddr(asm.getLastFreeCeil());
+//            tokenInfo.setMemoryAddr(asm.getLastFreeCeil());
             pidIdOnInfo.put(tokenInfo.getSemanticValue().toString(),tokenInfo);
         }
     }
