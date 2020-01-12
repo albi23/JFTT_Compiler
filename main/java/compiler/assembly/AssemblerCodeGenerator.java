@@ -16,9 +16,9 @@ public class AssemblerCodeGenerator {
 
     private String outFileName;
     private List<String> code = new ArrayList<>();
-    private static int lastFreeCeil = 11;
-    private static final int ONE_VALUE = ++lastFreeCeil;
-    private static final int MINUS_ONE_VALUE = ++lastFreeCeil;
+    private static long lastFreeCeil = 11;
+    private static final long ONE_VALUE = ++lastFreeCeil;
+    private static final long MINUS_ONE_VALUE = ++lastFreeCeil;
 
     public AssemblerCodeGenerator(String outFileName) {
         this.outFileName = outFileName;
@@ -26,8 +26,12 @@ public class AssemblerCodeGenerator {
 //        this.outFileName = "myModTest.sh";
     }
 
-    public  int getLastFreeCeil(){
+    public long getLastFreeCeil(){
         return lastFreeCeil;
+    }
+
+    public void updateLastFreeCeil(long shift) {
+        lastFreeCeil += shift;
     }
 
     private String appendLine(String toAppend) {
@@ -41,7 +45,7 @@ public class AssemblerCodeGenerator {
         code.add(appendLine("INC"));
         code.add(appendLine("INC"));
         code.add(appendLine("STORE ".concat(String.valueOf(ONE_VALUE))));
-        code.addAll(mod(new BigInteger("-17"), new BigInteger("4"), code.size()));
+        code.addAll(mod(new BigInteger("-111"), new BigInteger("20"), code.size()));
         this.showLastStatement(code,false,0);
         this.saveToFile(code);
     }
@@ -58,7 +62,7 @@ public class AssemblerCodeGenerator {
         }
     }
 
-    public List<String> getValue(BigInteger num, int storeCeil) {
+    public List<String> getValue(BigInteger num, long storeCeil) {
         long numberDeclarations = num.longValueExact();
         boolean signChange = false;
         List<String> innerCode = new ArrayList<>();
@@ -87,7 +91,7 @@ public class AssemblerCodeGenerator {
 
         while (commands.size() > 0) innerCode.add(appendLine(commands.pop()));
         if (signChange){
-            int ceil = (storeCeil > 0) ? storeCeil : lastFreeCeil+1;
+            long ceil = (storeCeil > 0) ? storeCeil : lastFreeCeil+1;
             innerCode.add(appendLine("STORE ".concat(String.valueOf(ceil))));
             innerCode.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE))));
             innerCode.add(appendLine("DEC"));
@@ -102,10 +106,10 @@ public class AssemblerCodeGenerator {
     public List<String> divide(BigInteger num1, BigInteger num2, int lineOffSet){
         List<String> commands = new ArrayList<>();
 
-        int num1MemoryPosition = ++lastFreeCeil;
-        int num2MemoryPosition = ++lastFreeCeil;
-        int resultMemoryPosition = ++lastFreeCeil;
-        int tempKMemoryPosition = ++lastFreeCeil;
+        long num1MemoryPosition = ++lastFreeCeil;
+        long num2MemoryPosition = ++lastFreeCeil;
+        long resultMemoryPosition = ++lastFreeCeil;
+        long tempKMemoryPosition = ++lastFreeCeil;
 
         commands.addAll(this.getValue(num1, num1MemoryPosition));// A
         commands.addAll(this.getValue(num2, num2MemoryPosition));// B
@@ -175,9 +179,9 @@ public class AssemblerCodeGenerator {
     public List<String> multiply(BigInteger num, BigInteger num2, int lineOffset) {
 
         List<String> innerCommands = new ArrayList<>();
-        int num1MemoryPosition = ++lastFreeCeil;
-        int num2MemoryPosition = ++lastFreeCeil;
-        int resultInMemory = ++lastFreeCeil;
+        long num1MemoryPosition = ++lastFreeCeil;
+        long num2MemoryPosition = ++lastFreeCeil;
+        long resultInMemory = ++lastFreeCeil;
 
         if (num.compareTo(num2) < 0) {// num powinien być zawsze większy niż num2
             BigInteger tmp = num; // shift
@@ -224,10 +228,10 @@ public class AssemblerCodeGenerator {
 
         List<String> modCommands = new ArrayList<>();
 
-        int resultInMemory = ++lastFreeCeil;
-        int num1MemoryPosition = ++lastFreeCeil;
-        int num2MemoryPosition = ++lastFreeCeil;
-        int num2CopyMemoryPosition = ++lastFreeCeil;
+        long resultInMemory = ++lastFreeCeil;
+        long num1MemoryPosition = ++lastFreeCeil;
+        long num2MemoryPosition = ++lastFreeCeil;
+        long num2CopyMemoryPosition = ++lastFreeCeil;
 
         modCommands.addAll(this.getValue(num, num1MemoryPosition));
         modCommands.addAll(this.getValue(num2, num2MemoryPosition)); // smaller number is always in num2memor
@@ -237,10 +241,10 @@ public class AssemblerCodeGenerator {
         modCommands.add(appendLine("STORE ".concat(String.valueOf(resultInMemory).concat(" #save result"))));
 
         if (num.signum() > 0 && num2.signum() < 0) {
-            return modPositiveOnNegative(modCommands, resultInMemory, num1MemoryPosition, num2CopyMemoryPosition, num2MemoryPosition, lineOffset,"JNEG");
+            return modPositiveAndNegative(modCommands, resultInMemory, num1MemoryPosition, num2CopyMemoryPosition, num2MemoryPosition, lineOffset,"JNEG");
         }
         if (num.signum() < 0 && num2.signum() > 0) {
-            return modPositiveOnNegative(modCommands, resultInMemory, num1MemoryPosition, num2CopyMemoryPosition, num2MemoryPosition, lineOffset,"JPOS");
+            return modPositiveAndNegative(modCommands, resultInMemory, num1MemoryPosition, num2CopyMemoryPosition, num2MemoryPosition, lineOffset,"JPOS");
         }
         this.changeIfNegativeNumber(modCommands,num,num1MemoryPosition);
         this.changeIfNegativeNumber(modCommands,num2,num2MemoryPosition);
@@ -280,7 +284,7 @@ public class AssemblerCodeGenerator {
         return modCommands;
     }
 
-    private List<String> modPositiveOnNegative(List<String> code, int resultInMemory,int num1Memory, int num1Copy,int num2Memory, int lineOffset, String jumCmd){
+    private List<String> modPositiveAndNegative(List<String> code, long resultInMemory, long num1Memory, long num1Copy, long num2Memory, int lineOffset, String jumCmd){
 
         code.add(appendLine("LOAD ".concat(String.valueOf(num1Memory))));
         code.add(appendLine("STORE ".concat(String.valueOf(num1Copy))));
@@ -307,13 +311,13 @@ public class AssemblerCodeGenerator {
         code.add(appendLine("HALT"));
     }
 
-    private void changeIfNegativeNumber(List<String> commands,BigInteger numToCheck, int ceilPost){
+    private void changeIfNegativeNumber(List<String> commands, BigInteger numToCheck, long ceilPost){
         if (numToCheck.signum() < 0) {
             this.changeNumberSign(commands, ceilPost);
         }
     }
 
-    private void changeNumberSign(List<String> commands, int ceilPost){
+    private void changeNumberSign(List<String> commands, long ceilPost){
         commands.add(appendLine("LOAD ".concat(String.valueOf(ONE_VALUE)).concat(" # start reversion"))); // get num = 1
         commands.add(appendLine("DEC")); // SET 0
         commands.add(appendLine("SUB ".concat(String.valueOf(ceilPost))));

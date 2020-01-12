@@ -8,6 +8,7 @@
 %debug
 
 %code imports {
+import compiler.assembly.AssemblerCodeGenerator;
 import compiler.holder.TokenInfo;
 import compiler.holder.types.SimpleType;
 import compiler.holder.types.VariableType;
@@ -15,6 +16,7 @@ import compiler.validation.Validation;
 import compiler.utility.ColorMessage;
 import static compiler.utility.ColorMessage.makeColor;
 import java.math.BigInteger;
+import java.util.Scanner;
 }
 
 %code{
@@ -24,6 +26,8 @@ import java.math.BigInteger;
   }
    private static CompilerFlex scanner = null;
    private static  Validation validation;
+   private Scanner numbersInput = new Scanner(System.in);
+
 
    public static void main(String argv[]) {
        if (argv.length != 2 ) {
@@ -87,9 +91,9 @@ declarations:  declarations COMMA PIDENTIFIER {
               }
 
               | declarations COMMA PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET {
-                //BigInteger beginArray = (BigInteger)((TokenInfo)$5).getSemanticValue();
-                //BigInteger endArray = (BigInteger)(((TokenInfo)$7).getSemanticValue());
-                //this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) $3);
+                BigInteger beginArray = (BigInteger)((TokenInfo)$5).getSemanticValue();
+                BigInteger endArray = (BigInteger)(((TokenInfo)$7).getSemanticValue());
+                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) $3);
                  makeColor(ColorMessage.WHITE,"[4] : declarations COMMA PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET");
                  makeColor(ColorMessage.WHITE,"[4] : declarations : "+(TokenInfo)$1+" PIDENTIFIER : "+(TokenInfo)$3+" NUM : "+(TokenInfo)$5+" NUM "+(TokenInfo)$7);
 
@@ -145,32 +149,38 @@ command:        identifier ASSIGN expression SEMICOLON {
                  makeColor(ColorMessage.BLUE,"[13] : DO commands WHILE condition ENDDO");
                  makeColor(ColorMessage.BLUE,"[13] : commands: "+(TokenInfo) $2+" condition: "+(TokenInfo) $1);
               }
-              | FOR PIDENTIFIER FROM value { System.out.println("FOR FROM VALUE "+(TokenInfo)$4); }
-              TO value { {System.out.println(" TO VALUE  "+(TokenInfo)$2+" DO COMMANDS : ");} }
+              | FOR PIDENTIFIER FROM value {
+
+               this.validation.loopIteratorPid((TokenInfo)$2,(TokenInfo)$4,VariableType.ITERATOR);
+              System.out.println("FOR "+(TokenInfo)$2+" FROM VALUE "+(TokenInfo)$4);
+              }
+              TO value {
+                System.out.println(" TO VALUE  "+(TokenInfo)$2+" DO COMMANDS : ");
+              }
               DO commands ENDFOR {
                 System.out.println("KONIEC FORA !!");
                makeColor(ColorMessage.BLUE,"[14] : FOR PIDENTIFIER FROM value TO value DO commands ENDFOR");
                makeColor(ColorMessage.BLUE,"[14] : PIDENTIFIER : "+(TokenInfo) $2+" value : "+(TokenInfo) $4+" value2 : "+(TokenInfo) $6+" commands "+(TokenInfo) $8);
                makeColor(ColorMessage.BLUE,"[14] : ENDFOR : "+(TokenInfo) $3);
-                //System.out.println("Iterujemy za pomocą  :"+$2);
-                //System.out.println("FROM                 :"+$4);
-                //System.out.println("TO                   : "+$6);
               }
 
-              | FOR PIDENTIFIER FROM value { System.out.println("FOR FROM VALUE "+(TokenInfo)$4); }
-               DOWNTO value {System.out.println(" DOWNTO VALUE"+(TokenInfo)$2);}
-               DO commands ENDFOR {
+              | FOR PIDENTIFIER FROM value {
 
+                this.validation.loopIteratorPid((TokenInfo)$2,(TokenInfo)$4,VariableType.ITERATOR);
+                System.out.println("FOR "+(TokenInfo)$2+" FROM VALUE "+(TokenInfo)$4);
+              }
+               DOWNTO value {
+               System.out.println(" DOWNTO VALUE"+(TokenInfo)$2);
+               }
+               DO commands ENDFOR {
+                System.out.println("KONIEC FORA !!");
                 makeColor(ColorMessage.BLUE,"[15] : FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR");
                 makeColor(ColorMessage.BLUE,"[15] : PIDENTIFIER : "+(TokenInfo) $2+" value : "+(TokenInfo) $4+" value2 : "+(TokenInfo) $6+" commands "+(TokenInfo) $8);
-                //System.out.println("Iterujemy za pomocą  :"+$2);
-                //System.out.println("FROM                 :"+$4);
-                //System.out.println("TO                   : "+$6);
                 }
               | READ identifier SEMICOLON {
                 makeColor(ColorMessage.BLUE,"[16] : READ identifier SEMICOLON ");
-                makeColor(ColorMessage.BLUE,"[16] :  identifier: "+(TokenInfo) $1);
-                //validation.validationOfVariableValues((TokenInfo)$1);
+                makeColor(ColorMessage.BLUE,"[16] :  identifier: "+(TokenInfo) $2);
+                this.validation.readFromInput(numbersInput,(TokenInfo)$2);
               }
               | WRITE value SEMICOLON {
                 makeColor(ColorMessage.BLUE,"[17] : WRITE value SEMICOLON ");
@@ -179,7 +189,6 @@ command:        identifier ASSIGN expression SEMICOLON {
               }
 ;
 expression:   value {
-                //System.out.println("value : "+(TokenInfo)$1);
                 makeColor(ColorMessage.PINK,"[18] :  value  ");
                 makeColor(ColorMessage.PINK,"[18] :  value : "+(TokenInfo)$1);
 
@@ -192,61 +201,57 @@ expression:   value {
               }
 
               | value MINUS value {
-              /** value MINUS value */
               makeColor(ColorMessage.PINK,"[20] :  value  MINUS value");
               makeColor(ColorMessage.PINK,"[20] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
 
               }
               | value TIMES value {
-              /** value TIMES value */
               makeColor(ColorMessage.PINK,"[21] :  value  TIMES value");
               makeColor(ColorMessage.PINK,"[21] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
               }
-              | value DIV value {/** value DIV value */
+              | value DIV value {
               makeColor(ColorMessage.PINK,"[22] :  value  DIV value");
               makeColor(ColorMessage.PINK,"[22] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
               }
-              | value MOD value {/** value MOD value */
+              | value MOD value {
               makeColor(ColorMessage.PINK,"[23] :  value  MOD value");
               makeColor(ColorMessage.PINK,"[23] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
               }
 ;
-condition:      value EQ value {/** value EQ value */
-
+condition:      value EQ value {
                 makeColor(ColorMessage.RED,"[24] :  value  EQ value");
                 makeColor(ColorMessage.RED,"[24] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
                 }
-              | value NEQ value {/** value NEQ value */
+              | value NEQ value {
                 makeColor(ColorMessage.RED,"[25] :  value  NEQ value");
                 makeColor(ColorMessage.RED,"[25] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
 
               }
-              | value LE value {/** value LE value */
+              | value LE value {
                 makeColor(ColorMessage.RED,"[26] :  value  LE value");
                 makeColor(ColorMessage.RED,"[26] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
 
               }
-              | value GE value {/** value GE value */
+              | value GE value {
                 makeColor(ColorMessage.RED,"[27] :  value  GE value");
                 makeColor(ColorMessage.RED,"[27] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
 
               }
-              | value LEQ value {/** value LEQ value */
+              | value LEQ value {
                 makeColor(ColorMessage.RED,"[28] :  value  LEQ value");
                 makeColor(ColorMessage.RED,"[28] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
 
               }
-              | value GEQ value {/** value GEQ value */
+              | value GEQ value {
                 makeColor(ColorMessage.RED,"[29] :  value  GEQ value");
                 makeColor(ColorMessage.RED,"[29] :  value1:  "+(TokenInfo)$1+" value2 : "+(TokenInfo)$3);
 
               }
 ;
 value:          NUM {
-                     //((TokenInfo)$1).setValue((BigInteger)((TokenInfo)$1).getSemanticValue());
-                     //makeColor(ColorMessage.PINK,"NUM "+$$);
-                      makeColor(ColorMessage.RED,"[30] :  value.NUM ");
-                      makeColor(ColorMessage.RED,"[30] :  NUM "+(TokenInfo)$1);
+                     $$ = this.validation.getConst((TokenInfo)$1);
+                     makeColor(ColorMessage.RED,"[30] :  value.NUM ");
+                     makeColor(ColorMessage.RED,"[30] :  NUM "+(TokenInfo)$1);
                }
               | identifier {
                 //makeColor(ColorMessage.PINK,"value.identifier "+$$);
@@ -256,14 +261,7 @@ value:          NUM {
 ;
 identifier:     PIDENTIFIER {
 
-                /* if (yystack.height >= 5){
-                   if (((TokenInfo)yystack.valueAt (0)).getBeforeTokenId() == Lexer.FROM){
-                        TokenInfo forIterator = (TokenInfo) yystack.valueAt(2);
-                        forIterator.setType(new SimpleType(new BigInteger("-1")));
-                        this.validation.pidIdOnInfo.put((String) forIterator.getSemanticValue(),forIterator);
-                   }
-                 }*/
-                //this.validation.getValueFromToken((TokenInfo)$1);
+                $$ = this.validation.getVar((TokenInfo)$1);
                 makeColor(ColorMessage.GREEN,"[32] : identifier -> PIDENTIFIER "+$$);
                 }
 

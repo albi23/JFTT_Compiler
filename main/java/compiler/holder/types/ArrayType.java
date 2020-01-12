@@ -1,5 +1,6 @@
 package compiler.holder.types;
 
+import compiler.holder.TokenInfo;
 import compiler.holder.TypeHolder;
 import compiler.validation.Validation;
 
@@ -10,34 +11,49 @@ public class ArrayType implements TypeHolder {
 
     private BigInteger beginTab;
     private BigInteger endTab;
-    private BigInteger[] tab;
     private BigInteger shift;
+    private  BigInteger arrSize;
 
     public ArrayType(BigInteger beginTab, BigInteger endTab) throws IllegalArgumentException{
-        BigInteger arrSize = endTab.subtract(beginTab).add(new BigInteger("1"));
+         arrSize = endTab.subtract(beginTab).add(new BigInteger("1"));
         if (Validation.isGreaterThanMaxInt(arrSize)) throw new IllegalArgumentException("The maximum size of an array is "+Integer.MAX_VALUE);
-        int tabSize = arrSize.intValue();
         this.beginTab = beginTab;
         this.endTab = endTab;
-        this.tab = new BigInteger[tabSize];
         this.shift = this.beginTab.negate();
     }
 
+    public long getArrSize() {
+        return arrSize.longValueExact();
+    }
 
     public void setValAtIndex(BigInteger indx, BigInteger value) throws ArrayIndexOutOfBoundsException {
         if (beginTab.compareTo(indx) > 0|| indx.compareTo(endTab) > 0) {
             throw new ArrayIndexOutOfBoundsException("Attempting to access a non-existing index: "+indx);
         }
         int shiftedIndex = shift.add(indx).intValue();
-        this.tab[shiftedIndex] = value;
     }
 
-    public BigInteger getValAtIndex(BigInteger indx) throws ArrayIndexOutOfBoundsException {
+    public boolean isCorrectIndx(BigInteger indx) throws ArrayIndexOutOfBoundsException {
         if (beginTab.compareTo(indx) > 0|| indx.compareTo(endTab) > 0) {
             throw new ArrayIndexOutOfBoundsException("Attempting to access a non-existing index: "+indx);
         }
-        int shiftedIndex = shift.add(indx).intValue();
-        return this.tab[shiftedIndex];
+        return true;
+    }
+
+    public BigInteger getBeginTab() {
+        return beginTab;
+    }
+
+    public void setBeginTab(BigInteger beginTab) {
+        this.beginTab = beginTab;
+    }
+
+    public BigInteger getEndTab() {
+        return endTab;
+    }
+
+    public void setEndTab(BigInteger endTab) {
+        this.endTab = endTab;
     }
 
     @Override
@@ -46,7 +62,6 @@ public class ArrayType implements TypeHolder {
                 "beginTab=" + beginTab +
                 ", endTab=" + endTab +
                 ", shift=" + shift +
-                ", tab=" + Arrays.toString(tab) +
                 '}';
     }
 }

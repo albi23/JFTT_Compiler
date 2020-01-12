@@ -14,6 +14,9 @@ public class TokenInfo<V> {
     private int beforeTokenId;
     private long memoryAddr;
 
+    public TokenInfo() {
+    }
+
     public TokenInfo(V semanticValue, int linePos) {
         this.semanticValue = semanticValue;
         this.linePos = linePos;
@@ -72,6 +75,7 @@ public class TokenInfo<V> {
     public String toString() {
         return "TokenInfo{" +
                 "sValue=" + semanticValue +
+                ", memoryAddr=" + memoryAddr +
 //                ", variableType=" + variableType +
 //                ", value=" + value +
                 ", linePos=" + linePos +

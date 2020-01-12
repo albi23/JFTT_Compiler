@@ -12,6 +12,7 @@ import compiler.holder.types.VariableType;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Validation {
 
@@ -19,8 +20,10 @@ public class Validation {
     private CompilerFlex scanner;
     private AssemblerCodeGenerator asm;
 
+
     public Validation(CompilerFlex scanner, AssemblerCodeGenerator asm) {
         this.scanner = scanner;
+        this.asm = asm;
     }
 
     public void showErrMsg(String msg, int line) {
@@ -32,129 +35,200 @@ public class Validation {
         System.exit(1);
     }
 
-    public void printDeclarations(){
-        pidIdOnInfo.forEach((k,v)->{
-            System.out.println("key : "+k+"  value : "+v);
+    public void printDeclarations() {
+        pidIdOnInfo.forEach((k, v) -> {
+            System.out.println("key : " + k + "  value : " + v);
         });
     }
 
+    public <V> void readFromInput(Scanner scan, TokenInfo<V> tokenInfo) {
+        System.out.print("ENTER THE NUMBER : ");
+        String number = scan.nextLine();
+        try {
+            BigInteger value = new BigInteger(number);
+            TokenInfo<V> updatedToken = this.pidIdOnInfo.get(tokenInfo.getSemanticValue().toString());
+            if (updatedToken.getVariableType() == VariableType.VAR) {
+                updatedToken.setValue(value);
+                System.out.println("GENEROWANIE KODU DO PRZYPISANIA ZMIENNEJ...");
+            }
+//            if (updatedToken.getVariableType() == VariableType.ARRAY) { }
+        }catch (NumberFormatException ex){
+            scanner.yyerror("Provided number is incorrect");
+        }catch (NullPointerException ex){
+            showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
+        }
+    }
+
+    public <V> TokenInfo<V> getConst(TokenInfo<V> token) {
+
+        String tokenName = token.getSemanticValue().toString();
+        try {
+            // liczba już istnieje
+            System.out.println("GENEROWANIE KODU : ZAŁADOWANIE ZMIENNEJ...");
+            TokenInfo<V> tokenInfo = this.pidIdOnInfo.get(tokenName);
+            tokenInfo.getLinePos(); // if null go to catch
+            return tokenInfo;
+        } catch (NullPointerException ex) {
+            System.out.println("GENEROWANIE KODU ZMIENNEJ...");
+            // liczba nie istnieje więc ją tworzymy
+            token.setValue(new BigInteger(tokenName)); // jest liczbą zapisaną w stringu, czyli ok
+            token.setMemoryAddr(asm.getLastFreeCeil());
+            asm.updateLastFreeCeil(1);
+            this.pidIdOnInfo.put(tokenName, token);
+            return token;
+        }
+    }
+
+    private <V> boolean  isLoopIterator(TokenInfo<V> tokenInfo){
+        return tokenInfo.getBeforeTokenId() == CompilerBison.Lexer.FROM;
+    }
     /**
      * Validation function using identifiers
      */
 
-    public <V>void validateNewPids(TokenInfo<V> tokenInfo, VariableType type){
+    public <V> void loopIteratorPid(TokenInfo<V> pidInfo, TokenInfo<V> valueInfo, VariableType type) {
+        pidInfo.setVariableType(type);
+        pidInfo.setMemoryAddr(asm.getLastFreeCeil());
+        asm.updateLastFreeCeil(1);
+        pidIdOnInfo.put(pidInfo.getSemanticValue().toString(), pidInfo);
+    }
+
+    public <V> void validateNewPids(TokenInfo<V> tokenInfo, VariableType type) {
         if (pidIdOnInfo.containsKey(tokenInfo.getSemanticValue().toString())) {
-            showErrMsg("second declaration " + tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
+            showErrMsg("second declaration " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         } else {
             tokenInfo.setVariableType(type);
-//            tokenInfo.setMemoryAddr(asm.getLastFreeCeil());
-            pidIdOnInfo.put(tokenInfo.getSemanticValue().toString(),tokenInfo);
+            tokenInfo.setMemoryAddr(asm.getLastFreeCeil());
+            asm.updateLastFreeCeil(1);
+            pidIdOnInfo.put(tokenInfo.getSemanticValue().toString(), tokenInfo);
         }
     }
 
     /**
      * Validaion array declarations
      */
-    public <V>void validateArrayDeclarations(BigInteger beginArray, BigInteger endArray, TokenInfo<V> tokenInfo){
-        if( beginArray.compareTo(endArray) > 0){
-            showErrMsg("invalid array "+tokenInfo.getSemanticValue()+" declaration",tokenInfo.getLinePos());
+    public <V> void validateArrayDeclarations(BigInteger beginArray, BigInteger endArray, TokenInfo<V> tokenInfo) {
+        if (beginArray.compareTo(endArray) > 0) {
+            showErrMsg("invalid array " + tokenInfo.getSemanticValue() + " declaration", tokenInfo.getLinePos());
         }
-        tokenInfo.setType(new ArrayType(beginArray,endArray));
+        ArrayType arrayType = new ArrayType(beginArray, endArray);
+        tokenInfo.setType(arrayType);
+        tokenInfo.setMemoryAddr(asm.getLastFreeCeil());
+        asm.updateLastFreeCeil(arrayType.getArrSize());
         validateNewPids(tokenInfo, VariableType.ARRAY);
     }
 
-    public <V> void validationOfVariableValues(TokenInfo<V> tokenInfo){
-        if(!pidIdOnInfo.containsKey(tokenInfo.getSemanticValue())){
-            showErrMsg("use of uninitialized variable "+tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
+    public <V> void validationOfVariableValues(TokenInfo<V> tokenInfo) {
+        if (!pidIdOnInfo.containsKey(tokenInfo.getSemanticValue())) {
+            showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         }
     }
 
-    public <V> void validateToWriteToken(TokenInfo<V> tokenInfo){
+    public <V> void validateToWriteToken(TokenInfo<V> tokenInfo) {
 
-        System.out.println("\u001b[48;5;28mvalidateToWriteToken : "+tokenInfo+"\u001b[0m");
-        if (!(tokenInfo.getSemanticValue() instanceof BigInteger)){ // only num token has semantic of BigInt
+        System.out.println("\u001b[48;5;28mvalidateToWriteToken : " + tokenInfo + "\u001b[0m");
+        if (!(tokenInfo.getSemanticValue() instanceof BigInteger)) { // only num token has semantic of BigInt
             try {
                 // Get from map all token info data - if not present we have try to access to undefined var
                 TypeHolder type = this.pidIdOnInfo.get(tokenInfo.getSemanticValue()).getType();
-                if (type instanceof ArrayType){
-                    System.out.println(" Array :"+ type.toString());
-                }else { // null value possible
-                    System.out.println("Simple type"+ type.toString());
+                if (type instanceof ArrayType) {
+                    System.out.println(" Array :" + type.toString());
+                } else { // null value possible
+                    System.out.println("Simple type" + type.toString());
                 }
-            }catch (NullPointerException ex){
-                showErrMsg("use of uninitialized variable "+tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
+            } catch (NullPointerException ex) {
+                showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
             }
         }
     }
 
-    public <V> void getArrValueFromToken(TokenInfo<V> tokenInfo, BigInteger indx){
-        try {
-            TypeHolder type = this.pidIdOnInfo.get(tokenInfo.getSemanticValue()).getType();
-            tokenInfo.setValue(((ArrayType)type).getValAtIndex(indx));
-        }catch (NullPointerException ex){
-            showErrMsg("use of uninitialized variable "+tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
+    // pidentifier ( num )
+    public <V> TokenInfo<V> getArrValueFromToken(TokenInfo<V> tokenInfo, BigInteger indx) {
+
+        TokenInfo<V> token = this.pidIdOnInfo.get(tokenInfo.getSemanticValue());
+        if (token == null){
+            showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         }
+        TokenInfo<V> tokenVal = new TokenInfo<>(tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
+        tokenVal.setVariableType(VariableType.ARRAY_EL);
+        ArrayType type1 = (ArrayType) token.getType();
+        type1.isCorrectIndx(indx);
+        tokenVal.setMemoryAddr(token.getMemoryAddr()+indx.longValueExact()-type1.getBeginTab().longValueExact());
+        return tokenVal;
     }
 
-    public <V> void getArrValueFromToken(TokenInfo<V> firstToken,TokenInfo<V> indexHolder){
-        try {
-            TokenInfo<V> tempIndexHolder = this.pidIdOnInfo.get(indexHolder.getSemanticValue());
-            if (tempIndexHolder.getValue() == null && tempIndexHolder.getType() instanceof SimpleType) return;
-            if (tempIndexHolder.getValue() == null ) showErrMsg("use of uninitialized variable "+indexHolder.getSemanticValue(),indexHolder.getLinePos());
-            this.getArrValueFromToken(firstToken,tempIndexHolder.getValue() );
-        }catch (NullPointerException ex){
-            showErrMsg("use of uninitialized variable "+indexHolder.getSemanticValue(),indexHolder.getLinePos());
+    public <V> TokenInfo<V> getArrValueFromToken(TokenInfo<V> firstToken, TokenInfo<V> indexHolder) {
+
+        TokenInfo<V> arrayHolder = this.pidIdOnInfo.get(firstToken.getSemanticValue());
+        TokenInfo<V> index = this.pidIdOnInfo.get(indexHolder.getSemanticValue());
+
+        if (arrayHolder == null || index == null){
+            showErrMsg("use of uninitialized variable " + indexHolder.getSemanticValue(), indexHolder.getLinePos());
+        } else if (index.getType() instanceof ArrayType){
+            showErrMsg("Invalid variable usage " + indexHolder.getSemanticValue(), indexHolder.getLinePos());
+        }else if (!(arrayHolder.getType() instanceof ArrayType)){
+            showErrMsg("Invalid variable usage " + arrayHolder.getSemanticValue(), arrayHolder.getLinePos());
+        }// err
+
+        TokenInfo<V> valToken = new TokenInfo<>(arrayHolder.getSemanticValue(),arrayHolder.getLinePos());
+        valToken.setVariableType(VariableType.ARRAY_EL);
+        ArrayType type1 = (ArrayType) arrayHolder.getType();
+        type1.isCorrectIndx(index.getValue());
+        valToken.setMemoryAddr(arrayHolder.getMemoryAddr()+index.getValue().longValueExact()-type1.getBeginTab().longValueExact());
+        return valToken;
+    }
+
+    public <V> TokenInfo<V> getVar(TokenInfo<V> tokenInfo) {
+        TokenInfo<V> declaredToken = this.pidIdOnInfo.get(tokenInfo.getSemanticValue());
+        if (declaredToken == null){
+            showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         }
+        System.out.println("Generate load value ?");
+        return declaredToken;
     }
 
-    public <V> void getValueFromToken(TokenInfo<V> tokenInfo){
-//        if (tokenInfo.getType() instanceof SimpleType){
-//            return;
-//        }
-        try {
-            tokenInfo.setValue(this.pidIdOnInfo.get(tokenInfo.getSemanticValue()).getValue());
-        }catch (NullPointerException ex){
-            showErrMsg("use of uninitialized variable "+tokenInfo.getSemanticValue(),tokenInfo.getLinePos());
-        }
-    }
-    public static boolean isGreaterThanMaxInt(BigInteger bigInt){
-      return (bigInt.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0);
+    public static boolean isGreaterThanMaxInt(BigInteger bigInt) {
+        return (bigInt.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0);
     }
 
-    /** Arithmetic operations */
+    /**
+     * Arithmetic operations
+     */
 
-    public   <V> void  add(TokenInfo<V> first, TokenInfo<V> second){
+    public <V> void add(TokenInfo<V> first, TokenInfo<V> second) {
         TokenInfo<V> firstToken = pidIdOnInfo.get(first.getSemanticValue());
         TokenInfo<V> secondToken = pidIdOnInfo.get(second.getSemanticValue());
-        if (firstToken.getType() instanceof SimpleType && secondToken.getType() instanceof SimpleType){
+        if (firstToken.getType() instanceof SimpleType && secondToken.getType() instanceof SimpleType) {
             ((SimpleType) firstToken.getType()).setCurrentValue(((SimpleType) secondToken.getType()).getCurrentValue().add(((SimpleType) secondToken.getType()).getCurrentValue()));
-        }else if (firstToken.getType() instanceof SimpleType){
+        } else if (firstToken.getType() instanceof SimpleType) {
             ((SimpleType) firstToken.getType()).setCurrentValue(secondToken.getValue().add(((SimpleType) firstToken.getType()).getCurrentValue()));
-        }else if (secondToken.getType() instanceof SimpleType){
+        } else if (secondToken.getType() instanceof SimpleType) {
             first.setValue(((SimpleType) secondToken.getType()).getCurrentValue().add(firstToken.getValue()));
-        }else{
+        } else {
             firstToken.setValue(secondToken.getValue().add(secondToken.getValue()));
         }
-    };
+    }
 
-    public  <V> TokenInfo<V> assign(TokenInfo<V> token,TokenInfo<V> valueHolder ){
+    ;
+
+    public <V> TokenInfo<V> assign(TokenInfo<V> token, TokenInfo<V> valueHolder) {
         TokenInfo<V> tokenInfo = null;
         try {
 
             tokenInfo = this.pidIdOnInfo.get(token.getSemanticValue());
             TokenInfo<V> tokenInfo1 = this.pidIdOnInfo.get(valueHolder.getSemanticValue());
-            if (tokenInfo.getType() instanceof  SimpleType &&tokenInfo1.getType() instanceof SimpleType){
+            if (tokenInfo.getType() instanceof SimpleType && tokenInfo1.getType() instanceof SimpleType) {
                 ((SimpleType) tokenInfo.getType()).setCurrentValue(((SimpleType) tokenInfo1.getType()).getCurrentValue());
-            }else if(tokenInfo.getType() instanceof SimpleType) {
+            } else if (tokenInfo.getType() instanceof SimpleType) {
                 ((SimpleType) tokenInfo.getType()).setCurrentValue(valueHolder.getValue());
-            }else if (tokenInfo1 != null && tokenInfo1.getType() instanceof SimpleType){
+            } else if (tokenInfo1 != null && tokenInfo1.getType() instanceof SimpleType) {
                 tokenInfo.setValue(((SimpleType) tokenInfo1.getType()).getCurrentValue());
-            }else {
+            } else {
                 tokenInfo.setValue(valueHolder.getValue());
             }
 
-        }catch (NullPointerException ex){
-            showErrMsg("use of uninitialized variable "+token.getSemanticValue(),token.getLinePos());
+        } catch (NullPointerException ex) {
+            showErrMsg("use of uninitialized variable " + token.getSemanticValue(), token.getLinePos());
         }
         return tokenInfo;
     }
