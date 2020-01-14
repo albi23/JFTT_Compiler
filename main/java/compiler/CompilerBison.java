@@ -589,13 +589,14 @@ import java.util.Scanner;
                makeColor(ColorMessage.BLUE,"[14] : FOR PIDENTIFIER FROM value TO value DO commands ENDFOR");
                makeColor(ColorMessage.BLUE,"[14] : PIDENTIFIER : "+(TokenInfo) yystack.valueAt (9)+" value : "+(TokenInfo) yystack.valueAt (7)+" value2 : "+(TokenInfo) yystack.valueAt (5)+" commands "+(TokenInfo) yystack.valueAt (3));
                makeColor(ColorMessage.BLUE,"[14] : ENDFOR : "+(TokenInfo) yystack.valueAt (8));
+               this.validation.removeLoopIteratorDeclarations((TokenInfo) yystack.valueAt (9));
               };
   break;
     
 
   case 19:
   if (yyn == 19)
-    /* "compiler.y":167  */ /* lalr1.java:480  */
+    /* "compiler.y":168  */ /* lalr1.java:480  */
     {
 
                 this.validation.loopIteratorPid((TokenInfo)yystack.valueAt (2),(TokenInfo)yystack.valueAt (0),VariableType.ITERATOR);
@@ -606,7 +607,7 @@ import java.util.Scanner;
 
   case 20:
   if (yyn == 20)
-    /* "compiler.y":172  */ /* lalr1.java:480  */
+    /* "compiler.y":173  */ /* lalr1.java:480  */
     {
                System.out.println(" DOWNTO VALUE"+(TokenInfo)yystack.valueAt (5));
                };
@@ -615,18 +616,19 @@ import java.util.Scanner;
 
   case 21:
   if (yyn == 21)
-    /* "compiler.y":175  */ /* lalr1.java:480  */
+    /* "compiler.y":176  */ /* lalr1.java:480  */
     {
                 System.out.println("KONIEC FORA !!");
                 makeColor(ColorMessage.BLUE,"[15] : FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR");
                 makeColor(ColorMessage.BLUE,"[15] : PIDENTIFIER : "+(TokenInfo) yystack.valueAt (9)+" value : "+(TokenInfo) yystack.valueAt (7)+" value2 : "+(TokenInfo) yystack.valueAt (5)+" commands "+(TokenInfo) yystack.valueAt (3));
+                this.validation.removeLoopIteratorDeclarations((TokenInfo) yystack.valueAt (9));
                 };
   break;
     
 
   case 22:
   if (yyn == 22)
-    /* "compiler.y":180  */ /* lalr1.java:480  */
+    /* "compiler.y":182  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.BLUE,"[16] : READ identifier SEMICOLON ");
                 makeColor(ColorMessage.BLUE,"[16] :  identifier: "+(TokenInfo) yystack.valueAt (1));
@@ -637,18 +639,18 @@ import java.util.Scanner;
 
   case 23:
   if (yyn == 23)
-    /* "compiler.y":185  */ /* lalr1.java:480  */
+    /* "compiler.y":187  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.BLUE,"[17] : WRITE value SEMICOLON ");
                 makeColor(ColorMessage.BLUE,"[17] :  value  : "+(TokenInfo) yystack.valueAt (1));
-                //this.validation.validateToWriteToken((TokenInfo)$2);
+                this.validation.validateToWriteToken((TokenInfo)yystack.valueAt (1));
               };
   break;
     
 
   case 24:
   if (yyn == 24)
-    /* "compiler.y":191  */ /* lalr1.java:480  */
+    /* "compiler.y":193  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.PINK,"[18] :  value  ");
                 makeColor(ColorMessage.PINK,"[18] :  value : "+(TokenInfo)yystack.valueAt (0));
@@ -659,7 +661,7 @@ import java.util.Scanner;
 
   case 25:
   if (yyn == 25)
-    /* "compiler.y":196  */ /* lalr1.java:480  */
+    /* "compiler.y":198  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.PINK,"[19] :  value  PLUS value");
                 makeColor(ColorMessage.PINK,"[19] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -671,7 +673,7 @@ import java.util.Scanner;
 
   case 26:
   if (yyn == 26)
-    /* "compiler.y":203  */ /* lalr1.java:480  */
+    /* "compiler.y":205  */ /* lalr1.java:480  */
     {
               makeColor(ColorMessage.PINK,"[20] :  value  MINUS value");
               makeColor(ColorMessage.PINK,"[20] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -682,7 +684,7 @@ import java.util.Scanner;
 
   case 27:
   if (yyn == 27)
-    /* "compiler.y":208  */ /* lalr1.java:480  */
+    /* "compiler.y":210  */ /* lalr1.java:480  */
     {
               makeColor(ColorMessage.PINK,"[21] :  value  TIMES value");
               makeColor(ColorMessage.PINK,"[21] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -692,7 +694,7 @@ import java.util.Scanner;
 
   case 28:
   if (yyn == 28)
-    /* "compiler.y":212  */ /* lalr1.java:480  */
+    /* "compiler.y":214  */ /* lalr1.java:480  */
     {
               makeColor(ColorMessage.PINK,"[22] :  value  DIV value");
               makeColor(ColorMessage.PINK,"[22] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -702,7 +704,7 @@ import java.util.Scanner;
 
   case 29:
   if (yyn == 29)
-    /* "compiler.y":216  */ /* lalr1.java:480  */
+    /* "compiler.y":218  */ /* lalr1.java:480  */
     {
               makeColor(ColorMessage.PINK,"[23] :  value  MOD value");
               makeColor(ColorMessage.PINK,"[23] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -712,7 +714,7 @@ import java.util.Scanner;
 
   case 30:
   if (yyn == 30)
-    /* "compiler.y":221  */ /* lalr1.java:480  */
+    /* "compiler.y":223  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.RED,"[24] :  value  EQ value");
                 makeColor(ColorMessage.RED,"[24] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -722,7 +724,7 @@ import java.util.Scanner;
 
   case 31:
   if (yyn == 31)
-    /* "compiler.y":225  */ /* lalr1.java:480  */
+    /* "compiler.y":227  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.RED,"[25] :  value  NEQ value");
                 makeColor(ColorMessage.RED,"[25] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -733,7 +735,7 @@ import java.util.Scanner;
 
   case 32:
   if (yyn == 32)
-    /* "compiler.y":230  */ /* lalr1.java:480  */
+    /* "compiler.y":232  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.RED,"[26] :  value  LE value");
                 makeColor(ColorMessage.RED,"[26] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -744,7 +746,7 @@ import java.util.Scanner;
 
   case 33:
   if (yyn == 33)
-    /* "compiler.y":235  */ /* lalr1.java:480  */
+    /* "compiler.y":237  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.RED,"[27] :  value  GE value");
                 makeColor(ColorMessage.RED,"[27] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -755,7 +757,7 @@ import java.util.Scanner;
 
   case 34:
   if (yyn == 34)
-    /* "compiler.y":240  */ /* lalr1.java:480  */
+    /* "compiler.y":242  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.RED,"[28] :  value  LEQ value");
                 makeColor(ColorMessage.RED,"[28] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -766,7 +768,7 @@ import java.util.Scanner;
 
   case 35:
   if (yyn == 35)
-    /* "compiler.y":245  */ /* lalr1.java:480  */
+    /* "compiler.y":247  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.RED,"[29] :  value  GEQ value");
                 makeColor(ColorMessage.RED,"[29] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
@@ -777,7 +779,7 @@ import java.util.Scanner;
 
   case 36:
   if (yyn == 36)
-    /* "compiler.y":251  */ /* lalr1.java:480  */
+    /* "compiler.y":253  */ /* lalr1.java:480  */
     {
                      yyval = this.validation.getConst((TokenInfo)yystack.valueAt (0));
                      makeColor(ColorMessage.RED,"[30] :  value.NUM ");
@@ -788,9 +790,9 @@ import java.util.Scanner;
 
   case 37:
   if (yyn == 37)
-    /* "compiler.y":256  */ /* lalr1.java:480  */
+    /* "compiler.y":258  */ /* lalr1.java:480  */
     {
-                //makeColor(ColorMessage.PINK,"value.identifier "+$$);
+                yyval = (TokenInfo)yystack.valueAt (0); // returned under...
                 makeColor(ColorMessage.RED,"[31] : value.identifier ");
                 makeColor(ColorMessage.RED,"[31] : value.identifier "+(TokenInfo)yystack.valueAt (0));
               };
@@ -799,7 +801,7 @@ import java.util.Scanner;
 
   case 38:
   if (yyn == 38)
-    /* "compiler.y":262  */ /* lalr1.java:480  */
+    /* "compiler.y":264  */ /* lalr1.java:480  */
     {
 
                 yyval = this.validation.getVar((TokenInfo)yystack.valueAt (0));
@@ -810,9 +812,9 @@ import java.util.Scanner;
 
   case 39:
   if (yyn == 39)
-    /* "compiler.y":268  */ /* lalr1.java:480  */
+    /* "compiler.y":270  */ /* lalr1.java:480  */
     {
-                //this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
+                yyval = this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(TokenInfo)yystack.valueAt (1) );
                 //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
                 makeColor(ColorMessage.GREEN,"[33] PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET ");
                 makeColor(ColorMessage.GREEN,"[33] PIDENTIFIER "+(TokenInfo)yystack.valueAt (3)+" PIDENTIFIER "+(TokenInfo)yystack.valueAt (1));
@@ -822,18 +824,17 @@ import java.util.Scanner;
 
   case 40:
   if (yyn == 40)
-    /* "compiler.y":274  */ /* lalr1.java:480  */
+    /* "compiler.y":276  */ /* lalr1.java:480  */
     {
                 makeColor(ColorMessage.GREEN,"[34] PIDENTIFIER L_BRACKET NUM R_BRACKET ");
                 makeColor(ColorMessage.GREEN,"[34] PIDENTIFIER "+(TokenInfo)yystack.valueAt (3)+" PIDENTIFIER "+(TokenInfo)yystack.valueAt (1));
-
-                //this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
+                yyval = this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue()) );
               };
   break;
     
 
 
-/* "CompilerBison.java":837  */ /* lalr1.java:480  */
+/* "CompilerBison.java":838  */ /* lalr1.java:480  */
         default: break;
       }
 
@@ -1464,10 +1465,10 @@ private static final byte yycheck_[] = yycheck_init();
     return new short[]
     {
        0,    74,    74,    74,    82,    87,    93,   101,   107,   116,
-     121,   127,   135,   139,   144,   148,   152,   157,   152,   167,
-     172,   167,   180,   185,   191,   196,   203,   208,   212,   216,
-     221,   225,   230,   235,   240,   245,   251,   256,   262,   268,
-     274
+     121,   127,   135,   139,   144,   148,   152,   157,   152,   168,
+     173,   168,   182,   187,   193,   198,   205,   210,   214,   218,
+     223,   227,   232,   237,   242,   247,   253,   258,   264,   270,
+     276
     };
   }
 
@@ -1589,9 +1590,9 @@ private static final byte yycheck_[] = yycheck_init();
    }
    
 
-/* "CompilerBison.java":1593  */ /* lalr1.java:1056  */
+/* "CompilerBison.java":1594  */ /* lalr1.java:1056  */
 
 }
 
-/* "compiler.y":280  */ /* lalr1.java:1060  */
+/* "compiler.y":281  */ /* lalr1.java:1060  */
 

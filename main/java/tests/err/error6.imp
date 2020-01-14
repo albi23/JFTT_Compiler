@@ -1,6 +1,7 @@
 [ Błąd w linii 5: niewłaściwe użycie zmiennej tablicowej b ]
 DECLARE
-  d
+  a, b(10:10)
 BEGIN
-  d ASSIGN 2 PLUS 3;
+  b ASSIGN 1;
+  a ASSIGN b;
 END

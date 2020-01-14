@@ -88,6 +88,7 @@ public class Validation {
 
     public <V> void loopIteratorPid(TokenInfo<V> pidInfo, TokenInfo<V> valueInfo, VariableType type) {
         pidInfo.setVariableType(type);
+        pidInfo.setValue(valueInfo.getValue());
         pidInfo.setMemoryAddr(asm.getLastFreeCeil());
         asm.updateLastFreeCeil(1);
         pidIdOnInfo.put(pidInfo.getSemanticValue().toString(), pidInfo);
@@ -118,28 +119,18 @@ public class Validation {
         validateNewPids(tokenInfo, VariableType.ARRAY);
     }
 
-    public <V> void validationOfVariableValues(TokenInfo<V> tokenInfo) {
-        if (!pidIdOnInfo.containsKey(tokenInfo.getSemanticValue())) {
-            showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
-        }
+    public <V> void removeLoopIteratorDeclarations(TokenInfo<V> tokenInfo){
+        this.pidIdOnInfo.remove(tokenInfo.getSemanticValue());
     }
 
-    public <V> void validateToWriteToken(TokenInfo<V> tokenInfo) {
+    public <V> TokenInfo<V> validateToWriteToken(TokenInfo<V> tokenInfo) {
 
-        System.out.println("\u001b[48;5;28mvalidateToWriteToken : " + tokenInfo + "\u001b[0m");
-        if (!(tokenInfo.getSemanticValue() instanceof BigInteger)) { // only num token has semantic of BigInt
-            try {
-                // Get from map all token info data - if not present we have try to access to undefined var
-                TypeHolder type = this.pidIdOnInfo.get(tokenInfo.getSemanticValue()).getType();
-                if (type instanceof ArrayType) {
-                    System.out.println(" Array :" + type.toString());
-                } else { // null value possible
-                    System.out.println("Simple type" + type.toString());
-                }
-            } catch (NullPointerException ex) {
-                showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
-            }
+        TokenInfo<V> token = this.pidIdOnInfo.get(tokenInfo.getSemanticValue());
+        if (token.getVariableType() == VariableType.ARRAY || token.getVariableType() == VariableType.ARRAY_EL) return token;
+        if (token == null || token.getValue() == null){
+            showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         }
+        return token;
     }
 
     // pidentifier ( num )
@@ -148,6 +139,10 @@ public class Validation {
         TokenInfo<V> token = this.pidIdOnInfo.get(tokenInfo.getSemanticValue());
         if (token == null){
             showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
+            return null;
+        }
+        if (!(token.getVariableType() == VariableType.ARRAY)){
+            showErrMsg("Invalid variable usage " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         }
         TokenInfo<V> tokenVal = new TokenInfo<>(tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         tokenVal.setVariableType(VariableType.ARRAY_EL);
@@ -180,7 +175,14 @@ public class Validation {
 
     public <V> TokenInfo<V> getVar(TokenInfo<V> tokenInfo) {
         TokenInfo<V> declaredToken = this.pidIdOnInfo.get(tokenInfo.getSemanticValue());
-        if (declaredToken == null){
+
+        // if iterator of loop then skip
+        if (declaredToken.getVariableType() == VariableType.ITERATOR) return declaredToken;
+
+        if (declaredToken.getVariableType() == VariableType.ARRAY) // zwracanie całej tablicy jest błędem ?
+            showErrMsg("Invalid variable usage " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
+
+        if (declaredToken == null){ // can be null ...
             showErrMsg("use of uninitialized variable " + tokenInfo.getSemanticValue(), tokenInfo.getLinePos());
         }
         System.out.println("Generate load value ?");

@@ -162,6 +162,7 @@ command:        identifier ASSIGN expression SEMICOLON {
                makeColor(ColorMessage.BLUE,"[14] : FOR PIDENTIFIER FROM value TO value DO commands ENDFOR");
                makeColor(ColorMessage.BLUE,"[14] : PIDENTIFIER : "+(TokenInfo) $2+" value : "+(TokenInfo) $4+" value2 : "+(TokenInfo) $6+" commands "+(TokenInfo) $8);
                makeColor(ColorMessage.BLUE,"[14] : ENDFOR : "+(TokenInfo) $3);
+               this.validation.removeLoopIteratorDeclarations((TokenInfo) $2);
               }
 
               | FOR PIDENTIFIER FROM value {
@@ -176,6 +177,7 @@ command:        identifier ASSIGN expression SEMICOLON {
                 System.out.println("KONIEC FORA !!");
                 makeColor(ColorMessage.BLUE,"[15] : FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR");
                 makeColor(ColorMessage.BLUE,"[15] : PIDENTIFIER : "+(TokenInfo) $2+" value : "+(TokenInfo) $4+" value2 : "+(TokenInfo) $6+" commands "+(TokenInfo) $8);
+                this.validation.removeLoopIteratorDeclarations((TokenInfo) $2);
                 }
               | READ identifier SEMICOLON {
                 makeColor(ColorMessage.BLUE,"[16] : READ identifier SEMICOLON ");
@@ -185,7 +187,7 @@ command:        identifier ASSIGN expression SEMICOLON {
               | WRITE value SEMICOLON {
                 makeColor(ColorMessage.BLUE,"[17] : WRITE value SEMICOLON ");
                 makeColor(ColorMessage.BLUE,"[17] :  value  : "+(TokenInfo) $2);
-                //this.validation.validateToWriteToken((TokenInfo)$2);
+                this.validation.validateToWriteToken((TokenInfo)$2);
               }
 ;
 expression:   value {
@@ -254,7 +256,7 @@ value:          NUM {
                      makeColor(ColorMessage.RED,"[30] :  NUM "+(TokenInfo)$1);
                }
               | identifier {
-                //makeColor(ColorMessage.PINK,"value.identifier "+$$);
+                $$ = (TokenInfo)$1; // returned under...
                 makeColor(ColorMessage.RED,"[31] : value.identifier ");
                 makeColor(ColorMessage.RED,"[31] : value.identifier "+(TokenInfo)$1);
               }
@@ -266,7 +268,7 @@ identifier:     PIDENTIFIER {
                 }
 
               | PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET {
-                //this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
+                $$ = this.validation.getArrValueFromToken((TokenInfo)$1,(TokenInfo)$3 );
                 //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
                 makeColor(ColorMessage.GREEN,"[33] PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET ");
                 makeColor(ColorMessage.GREEN,"[33] PIDENTIFIER "+(TokenInfo)$1+" PIDENTIFIER "+(TokenInfo)$3);
@@ -274,7 +276,6 @@ identifier:     PIDENTIFIER {
               | PIDENTIFIER L_BRACKET NUM R_BRACKET{
                 makeColor(ColorMessage.GREEN,"[34] PIDENTIFIER L_BRACKET NUM R_BRACKET ");
                 makeColor(ColorMessage.GREEN,"[34] PIDENTIFIER "+(TokenInfo)$1+" PIDENTIFIER "+(TokenInfo)$3);
-
-                //this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
+                $$ = this.validation.getArrValueFromToken((TokenInfo)$1,(BigInteger)(((TokenInfo)$3).getSemanticValue()) );
               }
 %%
