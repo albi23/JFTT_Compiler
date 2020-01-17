@@ -61,9 +61,6 @@ numbers = 0|[1-9][0-9]*|-[1-9][0-9]*
 "BEGIN"       {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
                 return setLastTokenAndReturn(BEGIN); }
-"END"         {
-                tokenInfo = new TokenInfo<>(yytext(),yyline+1);
-                return setLastTokenAndReturn(END); }
 "ASSIGN"      {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
                 return setLastTokenAndReturn(ASSIGN); }
@@ -145,6 +142,9 @@ numbers = 0|[1-9][0-9]*|-[1-9][0-9]*
 "GEQ"         {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
                 return setLastTokenAndReturn(GEQ); }
+"END"         {
+                tokenInfo = new TokenInfo<>(yytext(),yyline+1);
+                return setLastTokenAndReturn(END); }
 ,             {
                 tokenInfo = new TokenInfo<>(yytext(),yyline+1);
                 return setLastTokenAndReturn(COMMA);}

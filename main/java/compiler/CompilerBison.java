@@ -37,6 +37,7 @@ package compiler;
 /* "%code imports" blocks.  */
 /* "compiler.y":10  */ /* lalr1.java:92  */
 
+import compiler.assembly.AssemblerCodeGenerator;
 import compiler.holder.TokenInfo;
 import compiler.holder.types.SimpleType;
 import compiler.holder.types.VariableType;
@@ -44,8 +45,9 @@ import compiler.validation.Validation;
 import compiler.utility.ColorMessage;
 import static compiler.utility.ColorMessage.makeColor;
 import java.math.BigInteger;
+import java.util.Scanner;
 
-/* "CompilerBison.java":49  */ /* lalr1.java:92  */
+/* "CompilerBison.java":51  */ /* lalr1.java:92  */
 
 /**
  * A Bison parser, automatically generated from <tt>compiler.y</tt>.
@@ -93,71 +95,71 @@ import java.math.BigInteger;
 
 /* Tokens.  */
     /** Token number,to be returned by the scanner.  */
-    static final int COMMA = 258;
+    static final int NUM = 258;
     /** Token number,to be returned by the scanner.  */
-    static final int L_BRACKET = 259;
+    static final int PIDENTIFIER = 259;
     /** Token number,to be returned by the scanner.  */
-    static final int R_BRACKET = 260;
+    static final int COMMA = 260;
     /** Token number,to be returned by the scanner.  */
-    static final int SEMICOLON = 261;
+    static final int L_BRACKET = 261;
     /** Token number,to be returned by the scanner.  */
-    static final int ERROR = 262;
+    static final int R_BRACKET = 262;
     /** Token number,to be returned by the scanner.  */
-    static final int DECLARE = 263;
+    static final int SEMICOLON = 263;
     /** Token number,to be returned by the scanner.  */
-    static final int BEGIN = 264;
+    static final int ERROR = 264;
     /** Token number,to be returned by the scanner.  */
-    static final int END = 265;
+    static final int DECLARE = 265;
     /** Token number,to be returned by the scanner.  */
-    static final int IF = 266;
+    static final int BEGIN = 266;
     /** Token number,to be returned by the scanner.  */
-    static final int WHILE = 267;
+    static final int END = 267;
     /** Token number,to be returned by the scanner.  */
-    static final int DO = 268;
+    static final int IF = 268;
     /** Token number,to be returned by the scanner.  */
-    static final int FOR = 269;
+    static final int WHILE = 269;
     /** Token number,to be returned by the scanner.  */
-    static final int THEN = 270;
+    static final int FOR = 270;
     /** Token number,to be returned by the scanner.  */
-    static final int ELSE = 271;
+    static final int THEN = 271;
     /** Token number,to be returned by the scanner.  */
-    static final int ENDIF = 272;
+    static final int ELSE = 272;
     /** Token number,to be returned by the scanner.  */
-    static final int FROM = 273;
+    static final int ENDIF = 273;
     /** Token number,to be returned by the scanner.  */
-    static final int TO = 274;
+    static final int FROM = 274;
     /** Token number,to be returned by the scanner.  */
-    static final int DOWNTO = 275;
+    static final int TO = 275;
     /** Token number,to be returned by the scanner.  */
-    static final int ENDFOR = 276;
+    static final int DOWNTO = 276;
     /** Token number,to be returned by the scanner.  */
-    static final int ENDWHILE = 277;
+    static final int ENDFOR = 277;
     /** Token number,to be returned by the scanner.  */
-    static final int ENDDO = 278;
+    static final int ENDWHILE = 278;
     /** Token number,to be returned by the scanner.  */
-    static final int COLON = 279;
+    static final int ENDDO = 279;
     /** Token number,to be returned by the scanner.  */
-    static final int READ = 280;
+    static final int COLON = 280;
     /** Token number,to be returned by the scanner.  */
-    static final int WRITE = 281;
+    static final int DO = 281;
     /** Token number,to be returned by the scanner.  */
-    static final int LE = 282;
+    static final int READ = 282;
     /** Token number,to be returned by the scanner.  */
-    static final int GE = 283;
+    static final int WRITE = 283;
     /** Token number,to be returned by the scanner.  */
-    static final int LEQ = 284;
+    static final int LE = 284;
     /** Token number,to be returned by the scanner.  */
-    static final int GEQ = 285;
+    static final int GE = 285;
     /** Token number,to be returned by the scanner.  */
-    static final int EQ = 286;
+    static final int LEQ = 286;
     /** Token number,to be returned by the scanner.  */
-    static final int NEQ = 287;
+    static final int GEQ = 287;
     /** Token number,to be returned by the scanner.  */
-    static final int ASSIGN = 288;
+    static final int EQ = 288;
     /** Token number,to be returned by the scanner.  */
-    static final int PIDENTIFIER = 289;
+    static final int NEQ = 289;
     /** Token number,to be returned by the scanner.  */
-    static final int NUM = 290;
+    static final int ASSIGN = 290;
     /** Token number,to be returned by the scanner.  */
     static final int PLUS = 291;
     /** Token number,to be returned by the scanner.  */
@@ -404,67 +406,81 @@ import java.math.BigInteger;
       {
           case 2:
   if (yyn == 2)
-    /* "compiler.y":88  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":74  */ /* lalr1.java:480  */
+    {
+                System.out.println("Deklaracje :... ");
+
+                };
   break;
     
 
   case 3:
   if (yyn == 3)
-    /* "compiler.y":89  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":78  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.WHITE,"[1] : DECLARE declarations BEGIN commands END");
+                makeColor(ColorMessage.WHITE,"[1] : declarations : "+(TokenInfo)yystack.valueAt (4)+" commands : "+(TokenInfo)yystack.valueAt (2));
+               };
   break;
     
 
   case 4:
   if (yyn == 4)
-    /* "compiler.y":91  */ /* lalr1.java:480  */
+    /* "compiler.y":82  */ /* lalr1.java:480  */
     {
-                /*System.out.println("\u001b[48;5;160m Ustawiam w ddeclarations COMMA PIDENTIFIER : "+$3+"na VAR\u001b[0m");*/
-                this.validation.validateNewPids((TokenInfo)yystack.valueAt (0), VariableType.VAR);
+                makeColor(ColorMessage.WHITE,"[2] :  BEGIN commands END");
+                makeColor(ColorMessage.WHITE,"[2] : "+(TokenInfo)yystack.valueAt (1));
               };
   break;
     
 
   case 5:
   if (yyn == 5)
-    /* "compiler.y":96  */ /* lalr1.java:480  */
+    /* "compiler.y":87  */ /* lalr1.java:480  */
     {
-                BigInteger beginArray = (BigInteger)((TokenInfo)yystack.valueAt (3)).getSemanticValue();
-                BigInteger endArray = (BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue());
-                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) yystack.valueAt (5));
-
+                makeColor(ColorMessage.WHITE,"[3] : declarations COMMA PIDENTIFIER");
+                makeColor(ColorMessage.WHITE,"[3] : declarations = "+(TokenInfo)yystack.valueAt (2)+" PIDENTIFIER : "+(TokenInfo)yystack.valueAt (0));
+                this.validation.validateNewPids((TokenInfo)yystack.valueAt (0), VariableType.VAR);
               };
   break;
     
 
   case 6:
   if (yyn == 6)
-    /* "compiler.y":102  */ /* lalr1.java:480  */
+    /* "compiler.y":93  */ /* lalr1.java:480  */
     {
-               this.validation.validateNewPids((TokenInfo)yystack.valueAt (0), VariableType.VAR);
+                BigInteger beginArray = (BigInteger)((TokenInfo)yystack.valueAt (3)).getSemanticValue();
+                BigInteger endArray = (BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue());
+                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) yystack.valueAt (5));
+                 makeColor(ColorMessage.WHITE,"[4] : declarations COMMA PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET");
+                 makeColor(ColorMessage.WHITE,"[4] : declarations : "+(TokenInfo)yystack.valueAt (7)+" PIDENTIFIER : "+(TokenInfo)yystack.valueAt (5)+" NUM : "+(TokenInfo)yystack.valueAt (3)+" NUM "+(TokenInfo)yystack.valueAt (1));
+
               };
   break;
     
 
   case 7:
   if (yyn == 7)
-    /* "compiler.y":106  */ /* lalr1.java:480  */
+    /* "compiler.y":101  */ /* lalr1.java:480  */
     {
-                /** Array declarations control */
-                BigInteger beginArray = (BigInteger)((TokenInfo)yystack.valueAt (3)).getSemanticValue();
-                BigInteger endArray = (BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue());
-                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) yystack.valueAt (5));
+               this.validation.validateNewPids((TokenInfo)yystack.valueAt (0), VariableType.VAR);
+               makeColor(ColorMessage.GREEN,"[5] : PIDENTIFIER");
+               makeColor(ColorMessage.GREEN,"[5] : PIDENTIFIER "+(TokenInfo)yystack.valueAt (0));
               };
   break;
     
 
   case 8:
   if (yyn == 8)
-    /* "compiler.y":113  */ /* lalr1.java:480  */
+    /* "compiler.y":107  */ /* lalr1.java:480  */
     {
-                    System.out.println("Mamy komendy : "+(TokenInfo)yystack.valueAt (1)+"\n oraz : "+(TokenInfo)yystack.valueAt (0));
-                };
+                /** Array declarations control */
+                BigInteger beginArray = (BigInteger)((TokenInfo)yystack.valueAt (3)).getSemanticValue();
+                BigInteger endArray = (BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue());
+                this.validation.validateArrayDeclarations(beginArray,endArray,(TokenInfo) yystack.valueAt (5));
+                makeColor(ColorMessage.GREEN,"[6] : PIDENTIFIER L_BRACKET NUM COLON NUM R_BRACKET ");
+                makeColor(ColorMessage.GREEN,"[6] : PIDENTIFIER "+(TokenInfo)yystack.valueAt (5)+" NUM : "+(TokenInfo) yystack.valueAt (3)+" NUM  : "+(TokenInfo) yystack.valueAt (1));
+              };
   break;
     
 
@@ -472,241 +488,353 @@ import java.math.BigInteger;
   if (yyn == 9)
     /* "compiler.y":116  */ /* lalr1.java:480  */
     {
-                     System.out.println("Mamy komendę : "+(TokenInfo)yystack.valueAt (0));
-               };
+                    //System.out.println("Mamy komendy : "+(TokenInfo)$1+"\n oraz : "+(TokenInfo)$2);
+                    makeColor(ColorMessage.YELLOW,"[7] : commands command ");
+                    makeColor(ColorMessage.YELLOW,"[7] : commands : "+(TokenInfo)yystack.valueAt (1)+"  command "+(TokenInfo)yystack.valueAt (0));
+                };
   break;
     
 
   case 10:
   if (yyn == 10)
-    /* "compiler.y":120  */ /* lalr1.java:480  */
+    /* "compiler.y":121  */ /* lalr1.java:480  */
     {
-                 TokenInfo tokenInfo =(TokenInfo) yystack.valueAt (3);
-                 tokenInfo = this.validation.assign((TokenInfo) yystack.valueAt (3),(TokenInfo) yystack.valueAt (1));
-                 //makeColor(ColorMessage.BLUE,"identifier : "+$1+"  expression : "+$3);
-                 //makeColor(ColorMessage.BLUE,"after change : "+tokenInfo);
-                };
+                     //System.out.println("Mamy komendę : "+(TokenInfo)$1);
+                     makeColor(ColorMessage.YELLOW,"[8] : command ");
+                     makeColor(ColorMessage.YELLOW,"[8] : command : "+(TokenInfo)yystack.valueAt (0));
+               };
   break;
     
 
   case 11:
   if (yyn == 11)
-    /* "compiler.y":126  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":127  */ /* lalr1.java:480  */
+    {
+                 TokenInfo tokenInfo =(TokenInfo) yystack.valueAt (3);
+                 //tokenInfo = this.validation.assign((TokenInfo) $1,(TokenInfo) $3);
+                 //makeColor(ColorMessage.BLUE,"identifier : "+$1+"  expression : "+$3);
+                 //makeColor(ColorMessage.BLUE,"after change : "+tokenInfo);
+                 makeColor(ColorMessage.BLUE,"[9] : identifier ASSIGN expression SEMICOLON ");
+                 makeColor(ColorMessage.BLUE,"[9] : identifier : "+(TokenInfo) yystack.valueAt (3)+" expression : "+(TokenInfo) yystack.valueAt (1));
+                };
   break;
     
 
   case 12:
   if (yyn == 12)
-    /* "compiler.y":127  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":135  */ /* lalr1.java:480  */
+    {
+                  makeColor(ColorMessage.BLUE,"[10] : IF condition THEN commands ELSE commands ENDIF");
+                  makeColor(ColorMessage.BLUE,"[10] : condition: "+(TokenInfo) yystack.valueAt (5)+" commands: "+(TokenInfo) yystack.valueAt (3)+" commands2 "+(TokenInfo) yystack.valueAt (1));
+              };
   break;
     
 
   case 13:
   if (yyn == 13)
-    /* "compiler.y":128  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":139  */ /* lalr1.java:480  */
+    {
+
+                makeColor(ColorMessage.BLUE,"[11] : IF condition THEN commands ENDIF");
+                makeColor(ColorMessage.BLUE,"[11] : condition: "+(TokenInfo) yystack.valueAt (3)+" commands: "+(TokenInfo)yystack.valueAt (1));
+              };
   break;
     
 
   case 14:
   if (yyn == 14)
-    /* "compiler.y":129  */ /* lalr1.java:480  */
-    {};
+    /* "compiler.y":144  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.BLUE,"[12] : WHILE condition DO commands ENDWHILE");
+                makeColor(ColorMessage.BLUE,"[12] :  condition: "+(TokenInfo) yystack.valueAt (3)+" commands "+(TokenInfo) yystack.valueAt (1));
+              };
   break;
     
 
   case 15:
   if (yyn == 15)
-    /* "compiler.y":130  */ /* lalr1.java:480  */
+    /* "compiler.y":148  */ /* lalr1.java:480  */
     {
-
-                System.out.println("Iterujemy za pomocą  :"+yystack.valueAt (7));
-                System.out.println("FROM                 :"+yystack.valueAt (5));
-                System.out.println("TO                   : "+yystack.valueAt (3));
+                 makeColor(ColorMessage.BLUE,"[13] : DO commands WHILE condition ENDDO");
+                 makeColor(ColorMessage.BLUE,"[13] : commands: "+(TokenInfo) yystack.valueAt (3)+" condition: "+(TokenInfo) yystack.valueAt (4));
               };
   break;
     
 
   case 16:
   if (yyn == 16)
-    /* "compiler.y":137  */ /* lalr1.java:480  */
+    /* "compiler.y":152  */ /* lalr1.java:480  */
     {
-                System.out.println("Iterujemy za pomocą  :"+yystack.valueAt (7));
-                System.out.println("FROM                 :"+yystack.valueAt (5));
-                System.out.println("TO                   : "+yystack.valueAt (3));
-                };
+
+               this.validation.loopIteratorPid((TokenInfo)yystack.valueAt (2),(TokenInfo)yystack.valueAt (0),VariableType.ITERATOR);
+              System.out.println("FOR "+(TokenInfo)yystack.valueAt (2)+" FROM VALUE "+(TokenInfo)yystack.valueAt (0));
+              };
   break;
     
 
   case 17:
   if (yyn == 17)
-    /* "compiler.y":142  */ /* lalr1.java:480  */
+    /* "compiler.y":157  */ /* lalr1.java:480  */
     {
-                validation.validationOfVariableValues((TokenInfo)yystack.valueAt (2));
+                System.out.println(" TO VALUE  "+(TokenInfo)yystack.valueAt (5)+" DO COMMANDS : ");
               };
   break;
     
 
   case 18:
   if (yyn == 18)
-    /* "compiler.y":145  */ /* lalr1.java:480  */
+    /* "compiler.y":160  */ /* lalr1.java:480  */
     {
-                this.validation.validateToWriteToken((TokenInfo)yystack.valueAt (1));
+                System.out.println("KONIEC FORA !!");
+               makeColor(ColorMessage.BLUE,"[14] : FOR PIDENTIFIER FROM value TO value DO commands ENDFOR");
+               makeColor(ColorMessage.BLUE,"[14] : PIDENTIFIER : "+(TokenInfo) yystack.valueAt (9)+" value : "+(TokenInfo) yystack.valueAt (7)+" value2 : "+(TokenInfo) yystack.valueAt (5)+" commands "+(TokenInfo) yystack.valueAt (3));
+               makeColor(ColorMessage.BLUE,"[14] : ENDFOR : "+(TokenInfo) yystack.valueAt (8));
+               this.validation.removeLoopIteratorDeclarations((TokenInfo) yystack.valueAt (9));
               };
   break;
     
 
   case 19:
   if (yyn == 19)
-    /* "compiler.y":149  */ /* lalr1.java:480  */
+    /* "compiler.y":168  */ /* lalr1.java:480  */
     {
-                System.out.println("value : "+(TokenInfo)yystack.valueAt (0));
+
+                this.validation.loopIteratorPid((TokenInfo)yystack.valueAt (2),(TokenInfo)yystack.valueAt (0),VariableType.ITERATOR);
+                System.out.println("FOR "+(TokenInfo)yystack.valueAt (2)+" FROM VALUE "+(TokenInfo)yystack.valueAt (0));
               };
   break;
     
 
   case 20:
   if (yyn == 20)
-    /* "compiler.y":152  */ /* lalr1.java:480  */
+    /* "compiler.y":173  */ /* lalr1.java:480  */
     {
-//                this.validation.add((TokenInfo)yyval,(TokenInfo)yystack.valueAt (0));
-                //makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+$$+" $1 = "+ $1+" $2 =  "+$3);
-              };
+               System.out.println(" DOWNTO VALUE"+(TokenInfo)yystack.valueAt (5));
+               };
   break;
     
 
   case 21:
   if (yyn == 21)
-    /* "compiler.y":157  */ /* lalr1.java:480  */
-    {/** value MINUS value */};
+    /* "compiler.y":176  */ /* lalr1.java:480  */
+    {
+                System.out.println("KONIEC FORA !!");
+                makeColor(ColorMessage.BLUE,"[15] : FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR");
+                makeColor(ColorMessage.BLUE,"[15] : PIDENTIFIER : "+(TokenInfo) yystack.valueAt (9)+" value : "+(TokenInfo) yystack.valueAt (7)+" value2 : "+(TokenInfo) yystack.valueAt (5)+" commands "+(TokenInfo) yystack.valueAt (3));
+                this.validation.removeLoopIteratorDeclarations((TokenInfo) yystack.valueAt (9));
+                };
   break;
     
 
   case 22:
   if (yyn == 22)
-    /* "compiler.y":158  */ /* lalr1.java:480  */
-    {/** value TIMES value */};
+    /* "compiler.y":182  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.BLUE,"[16] : READ identifier SEMICOLON ");
+                makeColor(ColorMessage.BLUE,"[16] :  identifier: "+(TokenInfo) yystack.valueAt (1));
+                this.validation.readFromInput(numbersInput,(TokenInfo)yystack.valueAt (1));
+              };
   break;
     
 
   case 23:
   if (yyn == 23)
-    /* "compiler.y":159  */ /* lalr1.java:480  */
-    {/** value DIV value */};
+    /* "compiler.y":187  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.BLUE,"[17] : WRITE value SEMICOLON ");
+                makeColor(ColorMessage.BLUE,"[17] :  value  : "+(TokenInfo) yystack.valueAt (1));
+                this.validation.validateToWriteToken((TokenInfo)yystack.valueAt (1));
+              };
   break;
     
 
   case 24:
   if (yyn == 24)
-    /* "compiler.y":160  */ /* lalr1.java:480  */
-    {/** value MOD value */};
+    /* "compiler.y":193  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.PINK,"[18] :  value  ");
+                makeColor(ColorMessage.PINK,"[18] :  value : "+(TokenInfo)yystack.valueAt (0));
+
+              };
   break;
     
 
   case 25:
   if (yyn == 25)
-    /* "compiler.y":162  */ /* lalr1.java:480  */
-    {/** value EQ value */};
+    /* "compiler.y":198  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.PINK,"[19] :  value  PLUS value");
+                makeColor(ColorMessage.PINK,"[19] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+                //this.validation.add((TokenInfo)$$,(TokenInfo)$3);
+                //makeColor(ColorMessage.GREEN,"(value PLUS value) $$ =  "+$$+" $1 = "+ $1+" $2 =  "+$3);
+              };
   break;
     
 
   case 26:
   if (yyn == 26)
-    /* "compiler.y":163  */ /* lalr1.java:480  */
-    {/** value NEQ value */};
+    /* "compiler.y":205  */ /* lalr1.java:480  */
+    {
+              makeColor(ColorMessage.PINK,"[20] :  value  MINUS value");
+              makeColor(ColorMessage.PINK,"[20] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+
+              };
   break;
     
 
   case 27:
   if (yyn == 27)
-    /* "compiler.y":164  */ /* lalr1.java:480  */
-    {/** value LE value */};
+    /* "compiler.y":210  */ /* lalr1.java:480  */
+    {
+              makeColor(ColorMessage.PINK,"[21] :  value  TIMES value");
+              makeColor(ColorMessage.PINK,"[21] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+              };
   break;
     
 
   case 28:
   if (yyn == 28)
-    /* "compiler.y":165  */ /* lalr1.java:480  */
-    {/** value GE value */};
+    /* "compiler.y":214  */ /* lalr1.java:480  */
+    {
+              makeColor(ColorMessage.PINK,"[22] :  value  DIV value");
+              makeColor(ColorMessage.PINK,"[22] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+              };
   break;
     
 
   case 29:
   if (yyn == 29)
-    /* "compiler.y":166  */ /* lalr1.java:480  */
-    {/** value LEQ value */};
+    /* "compiler.y":218  */ /* lalr1.java:480  */
+    {
+              makeColor(ColorMessage.PINK,"[23] :  value  MOD value");
+              makeColor(ColorMessage.PINK,"[23] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+              };
   break;
     
 
   case 30:
   if (yyn == 30)
-    /* "compiler.y":167  */ /* lalr1.java:480  */
-    {/** value GEQ value */};
+    /* "compiler.y":223  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.RED,"[24] :  value  EQ value");
+                makeColor(ColorMessage.RED,"[24] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+                };
   break;
     
 
   case 31:
   if (yyn == 31)
-    /* "compiler.y":169  */ /* lalr1.java:480  */
+    /* "compiler.y":227  */ /* lalr1.java:480  */
     {
-                     ((TokenInfo)yystack.valueAt (0)).setValue((BigInteger)((TokenInfo)yystack.valueAt (0)).getSemanticValue());
-                     //makeColor(ColorMessage.PINK,"NUM "+$$);
-               };
+                makeColor(ColorMessage.RED,"[25] :  value  NEQ value");
+                makeColor(ColorMessage.RED,"[25] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+
+              };
   break;
     
 
   case 32:
   if (yyn == 32)
-    /* "compiler.y":173  */ /* lalr1.java:480  */
+    /* "compiler.y":232  */ /* lalr1.java:480  */
     {
-                //makeColor(ColorMessage.PINK,"value.identifier "+$$);
+                makeColor(ColorMessage.RED,"[26] :  value  LE value");
+                makeColor(ColorMessage.RED,"[26] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+
               };
   break;
     
 
   case 33:
   if (yyn == 33)
-    /* "compiler.y":177  */ /* lalr1.java:480  */
+    /* "compiler.y":237  */ /* lalr1.java:480  */
     {
+                makeColor(ColorMessage.RED,"[27] :  value  GE value");
+                makeColor(ColorMessage.RED,"[27] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
 
-                 if (yystack.height >= 5){
-                   if (((TokenInfo)yystack.valueAt (0)).getBeforeTokenId() == Lexer.FROM){
-                        TokenInfo forIterator = (TokenInfo) yystack.valueAt(2);
-                        forIterator.setType(new SimpleType(new BigInteger("-1")));
-                        this.validation.pidIdOnInfo.put((String) forIterator.getSemanticValue(),forIterator);
-                   }
-                 }
-//                this.validation.getValueFromToken((TokenInfo)yystack.valueAt (0));
-                //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER "+$$);
-                };
+              };
   break;
     
 
   case 34:
   if (yyn == 34)
-    /* "compiler.y":190  */ /* lalr1.java:480  */
+    /* "compiler.y":242  */ /* lalr1.java:480  */
     {
-//                this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(TokenInfo)yystack.valueAt (1) );
-                //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
+                makeColor(ColorMessage.RED,"[28] :  value  LEQ value");
+                makeColor(ColorMessage.RED,"[28] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+
               };
   break;
     
 
   case 35:
   if (yyn == 35)
-    /* "compiler.y":194  */ /* lalr1.java:480  */
+    /* "compiler.y":247  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.RED,"[29] :  value  GEQ value");
+                makeColor(ColorMessage.RED,"[29] :  value1:  "+(TokenInfo)yystack.valueAt (2)+" value2 : "+(TokenInfo)yystack.valueAt (0));
+
+              };
+  break;
+    
+
+  case 36:
+  if (yyn == 36)
+    /* "compiler.y":253  */ /* lalr1.java:480  */
+    {
+                     yyval = this.validation.getConst((TokenInfo)yystack.valueAt (0));
+                     makeColor(ColorMessage.RED,"[30] :  value.NUM ");
+                     makeColor(ColorMessage.RED,"[30] :  NUM "+(TokenInfo)yystack.valueAt (0));
+               };
+  break;
+    
+
+  case 37:
+  if (yyn == 37)
+    /* "compiler.y":258  */ /* lalr1.java:480  */
+    {
+                yyval = (TokenInfo)yystack.valueAt (0); // returned under...
+                makeColor(ColorMessage.RED,"[31] : value.identifier ");
+                makeColor(ColorMessage.RED,"[31] : value.identifier "+(TokenInfo)yystack.valueAt (0));
+              };
+  break;
+    
+
+  case 38:
+  if (yyn == 38)
+    /* "compiler.y":264  */ /* lalr1.java:480  */
     {
 
+                yyval = this.validation.getVar((TokenInfo)yystack.valueAt (0));
+                makeColor(ColorMessage.GREEN,"[32] : identifier -> PIDENTIFIER "+yyval);
+                };
+  break;
+    
 
-                this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue()) );
+  case 39:
+  if (yyn == 39)
+    /* "compiler.y":270  */ /* lalr1.java:480  */
+    {
+                yyval = this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(TokenInfo)yystack.valueAt (1) );
+                //makeColor(ColorMessage.RED,"value.identifier.PIDENTIFIER tab(pid) "+$$);
+                makeColor(ColorMessage.GREEN,"[33] PIDENTIFIER L_BRACKET PIDENTIFIER R_BRACKET ");
+                makeColor(ColorMessage.GREEN,"[33] PIDENTIFIER "+(TokenInfo)yystack.valueAt (3)+" PIDENTIFIER "+(TokenInfo)yystack.valueAt (1));
+              };
+  break;
+    
+
+  case 40:
+  if (yyn == 40)
+    /* "compiler.y":276  */ /* lalr1.java:480  */
+    {
+                makeColor(ColorMessage.GREEN,"[34] PIDENTIFIER L_BRACKET NUM R_BRACKET ");
+                makeColor(ColorMessage.GREEN,"[34] PIDENTIFIER "+(TokenInfo)yystack.valueAt (3)+" PIDENTIFIER "+(TokenInfo)yystack.valueAt (1));
+                yyval = this.validation.getArrValueFromToken((TokenInfo)yystack.valueAt (3),(BigInteger)(((TokenInfo)yystack.valueAt (1)).getSemanticValue()) );
               };
   break;
     
 
 
-/* "CompilerBison.java":710  */ /* lalr1.java:480  */
+/* "CompilerBison.java":838  */ /* lalr1.java:480  */
         default: break;
       }
 
@@ -1115,8 +1243,8 @@ import java.math.BigInteger;
     return yyvalue == yytable_ninf_;
   }
 
-  private static final short yypact_ninf_ = -34;
-  private static final byte yytable_ninf_ = -1;
+  private static final short yypact_ninf_ = -20;
+  private static final byte yytable_ninf_ = -20;
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
@@ -1125,16 +1253,17 @@ import java.math.BigInteger;
   {
     return new short[]
     {
-      16,   -33,   173,     4,     3,     7,    -7,    -7,   173,   -25,
-     -22,    -7,    25,    32,   -34,     2,   -34,    12,    14,   173,
-     -34,    35,   174,   -34,    39,   183,    33,    48,    49,    -3,
-     -34,   -34,    -7,    37,    55,    89,   173,    -7,    -7,    -7,
-      -7,    -7,    -7,   173,    -7,    -7,   -34,   -34,    57,    59,
-      61,   -18,    30,    36,   -34,   108,   -34,   -34,   -34,   -34,
-     -34,   -34,   115,    -8,    19,   -34,   -34,   -34,    -7,    -7,
-      -7,    -7,    -7,    63,    50,   173,   -34,   -34,   -34,    -7,
-      -7,   -34,   -34,   -34,   -34,   -34,   -34,    46,   133,    69,
-      71,    67,   -34,   173,   173,   -34,   140,   157,   -34,   -34
+       8,    -3,   177,     4,    22,     5,    23,    18,    18,    28,
+     177,    30,    18,   117,   -20,    -9,   -20,    32,    34,    29,
+      20,   -20,    15,   -17,   -20,    13,    25,   193,    33,    38,
+     -20,   -20,    18,    26,    39,   177,    41,    46,   177,    18,
+      18,    18,    18,    18,    18,   177,    18,    18,   -20,   -20,
+      48,    27,    51,    55,   122,   -20,   -20,    97,   -20,   -20,
+     -20,   -20,   -20,   -20,   138,    40,   -19,   -20,    18,    18,
+      18,    18,    18,    52,    35,   -20,   177,   -20,   -20,    50,
+      54,   -20,   -20,   -20,   -20,   -20,   -20,   -20,    68,   142,
+      18,    18,    65,   -20,   -20,   -20,   -20,    47,    58,   177,
+     177,   158,   174,   -20,   -20
     };
   }
 
@@ -1146,16 +1275,17 @@ import java.math.BigInteger;
   {
     return new byte[]
     {
-       0,     0,     0,     0,     6,     0,     0,     0,     0,     0,
-       0,     0,    33,     0,     9,     0,     1,     0,     0,     0,
-      31,     0,     0,    32,     0,     0,     0,     0,     0,     0,
-       3,     8,     0,     0,     4,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    17,    18,     0,     0,
-       0,    19,     0,     0,     2,     0,    27,    28,    29,    30,
-      25,    26,     0,     0,     0,    34,    35,    10,     0,     0,
-       0,     0,     0,     0,     0,     0,    12,    13,    14,     0,
-       0,    20,    21,    22,    23,    24,     7,     0,     0,     0,
-       0,     0,    11,     0,     0,     5,     0,     0,    15,    16
+       0,     0,     0,     0,     7,     2,    38,     0,     0,     0,
+       0,     0,     0,     0,    10,     0,     1,     0,     0,     0,
+       0,    36,     0,     0,    37,     0,     0,     0,     0,     0,
+       4,     9,     0,     0,     5,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    22,    23,
+       0,    24,     0,     0,     0,    40,    39,     0,    32,    33,
+      34,    35,    30,    31,     0,    16,     0,    11,     0,     0,
+       0,     0,     0,     0,     0,     3,     0,    13,    14,     0,
+       0,    15,    25,    26,    27,    28,    29,     8,     0,     0,
+       0,     0,     0,    12,    17,    20,     6,     0,     0,     0,
+       0,     0,     0,    18,    21
     };
   }
 
@@ -1165,7 +1295,8 @@ import java.math.BigInteger;
   {
     return new byte[]
     {
-     -34,   -34,   -34,    -6,     1,   -34,    -4,    38,    -2
+     -20,   -20,   -20,   -20,    -8,    -7,   -20,   -20,   -20,   -20,
+     -20,    -5,    37,    -2
     };
   }
 
@@ -1175,7 +1306,8 @@ import java.math.BigInteger;
   {
     return new byte[]
     {
-      -1,     3,     5,    13,    14,    50,    21,    22,    23
+      -1,     3,    19,     5,    13,    14,    79,    97,    80,    98,
+      50,    22,    23,    24
     };
   }
 
@@ -1187,28 +1319,29 @@ import java.math.BigInteger;
   {
     return new byte[]
     {
-      15,     4,    25,    24,    16,    43,    15,    17,    27,    26,
-      18,    15,    12,    35,    31,    78,    19,    15,    68,    69,
-      70,    71,    72,    15,     1,     2,    31,    12,    20,    29,
-      55,    48,    49,    15,    15,    32,    31,    62,    79,    80,
-      63,    15,    30,     6,     7,     8,     9,    33,    34,    28,
-      36,    45,    43,    15,    46,    47,    31,    10,    11,    53,
-      15,    52,    65,    31,    66,    73,    12,    67,    86,    88,
-      51,    74,    95,    15,    87,    56,    57,    58,    59,    60,
-      61,    91,    93,    64,    94,     0,    15,    96,    97,    31,
-       0,    15,    15,     0,    15,    15,     0,    31,    31,    54,
-       6,     7,     8,     9,     0,     0,    81,    82,    83,    84,
-      85,     0,     0,     0,    10,    11,     0,    89,    90,     6,
-       7,     8,     9,    12,    75,    76,     6,     7,     8,     9,
-       0,     0,     0,    10,    11,     0,     0,    77,     0,     0,
-      10,    11,    12,     0,     6,     7,     8,     9,     0,    12,
-      92,     6,     7,     8,     9,     0,     0,     0,    10,    11,
-       0,    98,     0,     0,     0,    10,    11,    12,     6,     7,
-       8,     9,     0,     0,    12,     0,     0,     0,    99,     0,
-       0,     0,    10,    11,     6,     7,     8,     9,     0,     0,
-       0,    12,     0,     0,     6,    44,     8,     9,    10,    11,
-       0,    37,    38,    39,    40,    41,    42,    12,    10,    11,
-       0,     0,     0,     0,     0,     0,     0,    12
+      15,     4,    27,    25,    16,    81,    31,    45,    15,    28,
+      18,    15,    39,    40,    41,    42,    43,    44,     1,     2,
+      31,    21,     6,    36,    37,    15,    32,    54,    17,    20,
+      57,    38,    26,    15,     6,    33,    15,    64,    34,    45,
+      35,    48,    66,    15,    46,    53,    49,    31,    55,    29,
+      31,    52,    15,    56,    73,    15,    67,    31,    74,    87,
+      88,   -19,    15,    68,    69,    70,    71,    72,    89,    51,
+      90,    92,    96,    99,    15,    91,    58,    59,    60,    61,
+      62,    63,    31,    65,   100,     0,     0,    15,     0,     0,
+       0,   101,   102,     0,    31,    31,     0,    15,    15,    15,
+      15,     6,     0,     0,     0,    82,    83,    84,    85,    86,
+       7,     8,     9,     0,    76,    77,     0,     0,     0,     0,
+       0,     6,     0,    10,    11,    12,     6,    94,    95,    30,
+       7,     8,     9,     0,    75,     7,     8,     9,     0,     0,
+       0,     0,     6,    10,    11,    12,     6,     0,    10,    11,
+      12,     7,     8,     9,     0,     7,     8,     9,     0,     0,
+      93,    78,     6,     0,    10,    11,    12,     0,    10,    11,
+      12,     7,     8,     9,     0,     0,     0,     0,     6,     0,
+     103,     6,     0,     0,    10,    11,    12,     7,     8,     9,
+       7,     8,     9,     0,     0,     0,   104,     6,     0,     0,
+      10,    11,    12,    10,    11,    12,     7,    47,     9,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    10,
+      11,    12
     };
   }
 
@@ -1217,28 +1350,29 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       2,    34,     8,     7,     0,    13,     8,     4,    10,    34,
-       3,    13,    34,    19,    13,    23,     9,    19,    36,    37,
-      38,    39,    40,    25,     8,     9,    25,    34,    35,     4,
-      36,    34,    35,    35,    36,    33,    35,    43,    19,    20,
-      44,    43,    10,    11,    12,    13,    14,    35,    34,    11,
-      15,    18,    13,    55,     6,     6,    55,    25,    26,     4,
-      62,    24,     5,    62,     5,    35,    34,     6,     5,    75,
-      32,    35,     5,    75,    24,    37,    38,    39,    40,    41,
-      42,    35,    13,    45,    13,    -1,    88,    93,    94,    88,
-      -1,    93,    94,    -1,    96,    97,    -1,    96,    97,    10,
-      11,    12,    13,    14,    -1,    -1,    68,    69,    70,    71,
-      72,    -1,    -1,    -1,    25,    26,    -1,    79,    80,    11,
-      12,    13,    14,    34,    16,    17,    11,    12,    13,    14,
-      -1,    -1,    -1,    25,    26,    -1,    -1,    22,    -1,    -1,
-      25,    26,    34,    -1,    11,    12,    13,    14,    -1,    34,
-      17,    11,    12,    13,    14,    -1,    -1,    -1,    25,    26,
-      -1,    21,    -1,    -1,    -1,    25,    26,    34,    11,    12,
-      13,    14,    -1,    -1,    34,    -1,    -1,    -1,    21,    -1,
-      -1,    -1,    25,    26,    11,    12,    13,    14,    -1,    -1,
-      -1,    34,    -1,    -1,    11,    12,    13,    14,    25,    26,
-      -1,    27,    28,    29,    30,    31,    32,    34,    25,    26,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    34
+       2,     4,    10,     8,     0,    24,    13,    26,    10,    11,
+       5,    13,    29,    30,    31,    32,    33,    34,    10,    11,
+      27,     3,     4,     3,     4,    27,    35,    35,     6,     6,
+      38,    16,     4,    35,     4,     3,    38,    45,     4,    26,
+      11,     8,    47,    45,    19,     6,     8,    54,     7,    12,
+      57,    25,    54,     7,     3,    57,     8,    64,     3,     7,
+      25,    21,    64,    36,    37,    38,    39,    40,    76,    32,
+      20,     3,     7,    26,    76,    21,    39,    40,    41,    42,
+      43,    44,    89,    46,    26,    -1,    -1,    89,    -1,    -1,
+      -1,    99,   100,    -1,   101,   102,    -1,    99,   100,   101,
+     102,     4,    -1,    -1,    -1,    68,    69,    70,    71,    72,
+      13,    14,    15,    -1,    17,    18,    -1,    -1,    -1,    -1,
+      -1,     4,    -1,    26,    27,    28,     4,    90,    91,    12,
+      13,    14,    15,    -1,    12,    13,    14,    15,    -1,    -1,
+      -1,    -1,     4,    26,    27,    28,     4,    -1,    26,    27,
+      28,    13,    14,    15,    -1,    13,    14,    15,    -1,    -1,
+      18,    23,     4,    -1,    26,    27,    28,    -1,    26,    27,
+      28,    13,    14,    15,    -1,    -1,    -1,    -1,     4,    -1,
+      22,     4,    -1,    -1,    26,    27,    28,    13,    14,    15,
+      13,    14,    15,    -1,    -1,    -1,    22,     4,    -1,    -1,
+      26,    27,    28,    26,    27,    28,    13,    14,    15,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    26,
+      27,    28
     };
   }
 
@@ -1249,16 +1383,17 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,     8,     9,    42,    34,    43,    11,    12,    13,    14,
-      25,    26,    34,    44,    45,    49,     0,     4,     3,     9,
-      35,    47,    48,    49,    47,    44,    34,    49,    48,     4,
-      10,    45,    33,    35,    34,    44,    15,    27,    28,    29,
-      30,    31,    32,    13,    12,    18,     6,     6,    34,    35,
-      46,    48,    24,     4,    10,    44,    48,    48,    48,    48,
-      48,    48,    44,    47,    48,     5,     5,     6,    36,    37,
-      38,    39,    40,    35,    35,    16,    17,    22,    23,    19,
-      20,    48,    48,    48,    48,    48,     5,    24,    44,    48,
-      48,    35,    17,    13,    13,     5,    44,    44,    21,    21
+       0,    10,    11,    42,     4,    44,     4,    13,    14,    15,
+      26,    27,    28,    45,    46,    54,     0,     6,     5,    43,
+       6,     3,    52,    53,    54,    52,     4,    45,    54,    53,
+      12,    46,    35,     3,     4,    11,     3,     4,    16,    29,
+      30,    31,    32,    33,    34,    26,    19,    14,     8,     8,
+      51,    53,    25,     6,    45,     7,     7,    45,    53,    53,
+      53,    53,    53,    53,    45,    53,    52,     8,    36,    37,
+      38,    39,    40,     3,     3,    12,    17,    18,    23,    47,
+      49,    24,    53,    53,    53,    53,    53,     7,    25,    45,
+      20,    21,     3,    18,    53,    53,     7,    48,    50,    26,
+      26,    45,    45,    22,    22
     };
   }
 
@@ -1268,10 +1403,11 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,    41,    42,    42,    43,    43,    43,    43,    44,    44,
-      45,    45,    45,    45,    45,    45,    45,    45,    45,    46,
-      46,    46,    46,    46,    46,    47,    47,    47,    47,    47,
-      47,    48,    48,    49,    49,    49
+       0,    41,    43,    42,    42,    44,    44,    44,    44,    45,
+      45,    46,    46,    46,    46,    46,    47,    48,    46,    49,
+      50,    46,    46,    46,    51,    51,    51,    51,    51,    51,
+      52,    52,    52,    52,    52,    52,    53,    53,    54,    54,
+      54
     };
   }
 
@@ -1281,10 +1417,11 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new byte[]
     {
-       0,     2,     5,     3,     3,     8,     1,     6,     2,     1,
-       4,     7,     5,     5,     5,     9,     9,     3,     3,     1,
-       3,     3,     3,     3,     3,     3,     3,     3,     3,     3,
-       3,     1,     1,     1,     4,     4
+       0,     2,     0,     6,     3,     3,     8,     1,     6,     2,
+       1,     4,     7,     5,     5,     5,     0,     0,    11,     0,
+       0,    11,     3,     3,     1,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     1,     1,     1,     4,
+       4
     };
   }
 
@@ -1310,13 +1447,14 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new String[]
     {
-  "$end", "error", "$undefined", "COMMA", "L_BRACKET", "R_BRACKET",
-  "SEMICOLON", "ERROR", "DECLARE", "BEGIN", "END", "IF", "WHILE", "DO",
-  "FOR", "THEN", "ELSE", "ENDIF", "FROM", "TO", "DOWNTO", "ENDFOR",
-  "ENDWHILE", "ENDDO", "COLON", "READ", "WRITE", "LE", "GE", "LEQ", "GEQ",
-  "EQ", "NEQ", "ASSIGN", "PIDENTIFIER", "NUM", "PLUS", "MINUS", "TIMES",
-  "DIV", "MOD", "$accept", "program", "declarations", "commands",
-  "command", "expression", "condition", "value", "identifier", null
+  "$end", "error", "$undefined", "NUM", "PIDENTIFIER", "COMMA",
+  "L_BRACKET", "R_BRACKET", "SEMICOLON", "ERROR", "DECLARE", "BEGIN",
+  "END", "IF", "WHILE", "FOR", "THEN", "ELSE", "ENDIF", "FROM", "TO",
+  "DOWNTO", "ENDFOR", "ENDWHILE", "ENDDO", "COLON", "DO", "READ", "WRITE",
+  "LE", "GE", "LEQ", "GEQ", "EQ", "NEQ", "ASSIGN", "PLUS", "MINUS",
+  "TIMES", "DIV", "MOD", "$accept", "program", "$@1", "declarations",
+  "commands", "command", "$@2", "@3", "$@4", "@5", "expression",
+  "condition", "value", "identifier", null
     };
   }
 
@@ -1326,10 +1464,11 @@ private static final byte yycheck_[] = yycheck_init();
   {
     return new short[]
     {
-       0,    88,    88,    89,    91,    96,   102,   106,   113,   116,
-     120,   126,   127,   128,   129,   130,   137,   142,   145,   149,
-     152,   157,   158,   159,   160,   162,   163,   164,   165,   166,
-     167,   169,   173,   177,   190,   194
+       0,    74,    74,    74,    82,    87,    93,   101,   107,   116,
+     121,   127,   135,   139,   144,   148,   152,   157,   152,   168,
+     173,   168,   182,   187,   193,   198,   205,   210,   214,   218,
+     223,   227,   232,   237,   242,   247,   253,   258,   264,   270,
+     276
     };
   }
 
@@ -1401,8 +1540,8 @@ private static final byte yycheck_[] = yycheck_init();
       return yyundef_token_;
   }
 
-  private static final int yylast_ = 217;
-  private static final int yynnts_ = 9;
+  private static final int yylast_ = 221;
+  private static final int yynnts_ = 14;
   private static final int yyempty_ = -2;
   private static final int yyfinal_ = 16;
   private static final int yyterror_ = 1;
@@ -1414,7 +1553,7 @@ private static final byte yycheck_[] = yycheck_init();
 
 /* User implementation code.  */
 /* Unqualified %code blocks.  */
-/* "compiler.y":20  */ /* lalr1.java:1056  */
+/* "compiler.y":22  */ /* lalr1.java:1056  */
 
 
   public void color(String msg){
@@ -1422,53 +1561,38 @@ private static final byte yycheck_[] = yycheck_init();
   }
    private static CompilerFlex scanner = null;
    private static  Validation validation;
+   private Scanner numbersInput = new Scanner(System.in);
+
 
    public static void main(String argv[]) {
-           if (argv.length == 0) {
-               System.out.println("Usage : java CompilerBison [ --encoding <name> ] <inputfile(s)>");
+       if (argv.length != 2 ) {
+           System.out.println("Usage : java CompilerBison <inputfile>  <outputfile>");
+       } else {
+           String encodingName = "UTF-8";
+           try {
+               java.io.FileInputStream stream = new java.io.FileInputStream(argv[0]);
+               java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
+               scanner = new CompilerFlex(reader);
+               validation = new Validation(scanner, new AssemblerCodeGenerator(argv[1]));
+               CompilerBison compilerBison = new CompilerBison(scanner);
+               compilerBison.parse();
+           } catch (java.io.FileNotFoundException e) {
+               System.out.println("File not found : \"" + argv[0] + "\" or \" +" +argv[1] + "\"");
+           } catch (java.io.IOException e) {
+               System.out.println("IO error scanning file \"" + argv[0] + "\"");
+               System.out.println(e);
+           } catch (Exception e) {
+               System.out.println("Unexpected exception:");
+               e.printStackTrace();
            }
-           else {
-               int firstFilePos = 0;
-               String encodingName = "UTF-8";
-               if (argv[0].equals("--encoding")) {
-                   firstFilePos = 2;
-                   encodingName = argv[1];
-                   try {
-                       java.nio.charset.Charset.forName(encodingName); // Side-effect: is encodingName valid?
-                   } catch (Exception e) {
-                       System.out.println("Invalid encoding '" + encodingName + "'");
-                       return;
-                   }
-               }
-               for (int i = firstFilePos; i < argv.length; i++) {
 
-                   try {
-                       java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
-                       java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-                       scanner = new CompilerFlex(reader);
-                       validation = new Validation(scanner);
-                       CompilerBison compilerBison = new CompilerBison(scanner);
-                       compilerBison.parse();
-                   }
-                   catch (java.io.FileNotFoundException e) {
-                       System.out.println("File not found : \""+argv[i]+"\"");
-                   }
-                   catch (java.io.IOException e) {
-                       System.out.println("IO error scanning file \""+argv[i]+"\"");
-                       System.out.println(e);
-                   }
-                   catch (Exception e) {
-                       System.out.println("Unexpected exception:");
-                       e.printStackTrace();
-                   }
-               }
-           }
        }
+   }
    
 
-/* "CompilerBison.java":1470  */ /* lalr1.java:1056  */
+/* "CompilerBison.java":1594  */ /* lalr1.java:1056  */
 
 }
 
-/* "compiler.y":199  */ /* lalr1.java:1060  */
+/* "compiler.y":281  */ /* lalr1.java:1060  */
 

@@ -4,5 +4,4 @@ DECLARE
 BEGIN
   WRITE a;
   WRITE 5;
-  WRITE b(a);
 END
