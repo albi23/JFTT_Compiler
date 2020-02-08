@@ -19,6 +19,7 @@ pom.xml wymusza używanie Java8, oraz w przypadku pakowania archwium jar główn
 sposób użycia :
 
 `java Compiler <inputfile>  <outputfile>`
-
-lub po wygenerowaniu archiwum *.jar poleceniem `make createJavaJar` bądź tez przy użyciu maven'a `mvn package`
+lub 
 `java -jar  Compiler.jar`
+
+po wygenerowaniu archiwum *.jar poleceniem `make createJavaJar` bądź też przy użyciu maven'a `mvn package`
