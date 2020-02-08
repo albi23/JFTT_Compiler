@@ -20,6 +20,6 @@ sposób użycia :
 
 `java Compiler <inputfile>  <outputfile>`
 lub 
-`java -jar  Compiler.jar`
+`java -jar  Compiler.jar  <inputfile>  <outputfile>`
 
 po wygenerowaniu archiwum *.jar poleceniem `make createJavaJar` bądź też przy użyciu maven'a `mvn package`
