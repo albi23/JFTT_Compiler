@@ -7,6 +7,25 @@
     <groupId>compiler</groupId>
     <artifactId>MyCompiler</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <name>JFTT_Compiler</name>
+    <description>
+             Compiler for simple virtual machine 
+    </description>
+    <url>https://github.com/albi23/JFTT_Compiler</url>
+         
+    <inceptionYear>2020</inceptionYear>
+    <developers>
+        <developer>
+            <name>Albert Piekielny</name>
+            <email>albert.piekielny@blue-veery.com</email>
+            <organization>blue veery GmbH</organization>
+            <organizationUrl>https://github.com/blue-veery-gmbh</organizationUrl>
+        </developer>
+    </developers>
+     
+     
 
     <build>
         <plugins>
